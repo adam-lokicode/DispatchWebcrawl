@@ -6,8 +6,15 @@
   "scripts": {
     "start": "node src/index.js",
     "crawl": "HEADLESS=false node src/index.js",
+    "extract": "node src/extract-current-page.js",
+    "scrape": "node src/interactive-scraper.js",
+    "simple": "node src/simple-scraper.js",
+    "connect": "node src/connect-existing-browser.js",
+    "page": "node src/extract-page-content.js",
     "save-session": "node src/save-session.js",
     "save-session-updated": "node src/save-session-updated.js",
+    "find-selectors": "node src/find-selectors.js",
+    "step-by-step": "node src/step-by-step-guide.js",
     "test": "playwright test",
     "install-browsers": "playwright install"
   },

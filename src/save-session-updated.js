@@ -15,14 +15,40 @@ async function saveUpdatedDATOneSession() {
     const page = await context.newPage();
     
     try {
-        console.log('🔗 Opening DAT ONE load boards page...');
-        await page.goto('https://www.dat.com/load-boards', { 
-            waitUntil: 'networkidle',
-            timeout: 60000
-        });
+        console.log('🔗 Opening DAT ONE website...');
+        
+        // Try multiple URLs in case one fails
+        const urlsToTry = [
+            'https://www.dat.com/load-boards',
+            'https://www.dat.com/login',
+            'https://www.dat.com'
+        ];
+        
+        let loadedSuccessfully = false;
+        for (const url of urlsToTry) {
+            try {
+                console.log(`Trying: ${url}`);
+                await page.goto(url, { 
+                    waitUntil: 'load',  // Changed from networkidle to load
+                    timeout: 30000      // Reduced timeout
+                });
+                console.log(`✅ Successfully loaded: ${url}`);
+                loadedSuccessfully = true;
+                break;
+            } catch (error) {
+                console.log(`❌ Failed to load ${url}: ${error.message}`);
+                if (url === urlsToTry[urlsToTry.length - 1]) {
+                    throw error;
+                }
+            }
+        }
+        
+        if (!loadedSuccessfully) {
+            throw new Error('Failed to load any DAT ONE page');
+        }
         
         console.log('\n📝 Please follow these steps:');
-        console.log('1. Click the "Login" button');
+        console.log('1. If not already there, navigate to login or click "Login" button');
         console.log('2. Enter your DAT ONE credentials');
         console.log('3. Complete MFA if required');
         console.log('4. If you see "LOGIN ANYWAY" dialog, it will be handled automatically');
@@ -44,11 +70,15 @@ async function saveUpdatedDATOneSession() {
         
         // Check for and handle "LOGIN ANYWAY" dialog automatically
         try {
-            const loginAnywayButton = await page.$('button:has-text("LOGIN ANYWAY")');
-            if (loginAnywayButton) {
+            // Wait a bit for any dialogs to appear
+            await page.waitForTimeout(2000);
+            
+            // Use Playwright's locator instead of page.$ with :has-text()
+            const loginAnywayButton = await page.locator('button:has-text("LOGIN ANYWAY")').first();
+            if (await loginAnywayButton.isVisible()) {
                 console.log('🔄 Detected "LOGIN ANYWAY" dialog, clicking automatically...');
                 await loginAnywayButton.click();
-                await page.waitForLoadState('networkidle');
+                await page.waitForLoadState('load');
                 console.log('✅ Successfully handled session conflict');
             }
         } catch (error) {
@@ -63,15 +93,23 @@ async function saveUpdatedDATOneSession() {
         
         // Look for DAT One interface indicators
         const interfaceCheck = await page.evaluate(() => {
-            const searchLoadsButton = document.querySelector('button:has-text("SEARCH LOADS"), a:has-text("SEARCH LOADS")');
-            const postTruckButton = document.querySelector('button:has-text("POST A TRUCK"), a:has-text("POST A TRUCK")');
+            // Look for buttons with text content instead of :has-text()
+            const buttons = Array.from(document.querySelectorAll('button, a'));
+            const searchLoadsButton = buttons.find(btn => 
+                btn.textContent && btn.textContent.includes('SEARCH LOADS')
+            );
+            const postTruckButton = buttons.find(btn => 
+                btn.textContent && btn.textContent.includes('POST A TRUCK')
+            );
+            
             const bodyText = document.body.textContent.toLowerCase();
             
             return {
                 hasSearchLoads: !!searchLoadsButton,
                 hasPostTruck: !!postTruckButton,
                 hasLoadBoard: bodyText.includes('load') && bodyText.includes('search'),
-                currentTitle: document.title
+                currentTitle: document.title,
+                bodyTextSample: bodyText.substring(0, 200)
             };
         });
         
@@ -79,8 +117,11 @@ async function saveUpdatedDATOneSession() {
         
         if (interfaceCheck.hasSearchLoads || interfaceCheck.hasPostTruck) {
             console.log('✅ Successfully reached DAT One interface!');
+        } else if (interfaceCheck.hasLoadBoard) {
+            console.log('✅ Appears to be on a DAT load board related page');
         } else {
             console.log('⚠️ Warning: May not be on the correct DAT One interface yet.');
+            console.log('Try navigating to the load board if needed.');
         }
         
         // Save the session

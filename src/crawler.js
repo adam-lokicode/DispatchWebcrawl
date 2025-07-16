@@ -97,8 +97,8 @@ class DATOneFreightCrawler {
                 await passwordField.type(password, { delay: 150 });
                 
                 // Find and click login button
-                const loginButton = await this.page.$('button[type="submit"], input[type="submit"], button:has-text("Login"), button:has-text("Sign In")');
-                if (loginButton) {
+                const loginButton = await this.page.locator('button[type="submit"], input[type="submit"], button:has-text("Login"), button:has-text("Sign In")').first();
+                if (await loginButton.isVisible()) {
                     await loginButton.click();
                 } else {
                     throw new Error('Could not find login button');
@@ -109,8 +109,8 @@ class DATOneFreightCrawler {
                 
                 // Check for "already logged in" dialog and handle it
                 try {
-                    const loginAnywayButton = await this.page.$('button:has-text("LOGIN ANYWAY")');
-                    if (loginAnywayButton) {
+                    const loginAnywayButton = await this.page.locator('button:has-text("LOGIN ANYWAY")').first();
+                    if (await loginAnywayButton.isVisible()) {
                         console.log('🔄 Detected "already logged in" dialog, clicking LOGIN ANYWAY...');
                         await loginAnywayButton.click();
                         await this.page.waitForLoadState('networkidle');
@@ -154,8 +154,8 @@ class DATOneFreightCrawler {
             
             // Handle any session conflict dialog that might appear
             try {
-                const loginAnywayButton = await this.page.$('button:has-text("LOGIN ANYWAY")');
-                if (loginAnywayButton) {
+                const loginAnywayButton = await this.page.locator('button:has-text("LOGIN ANYWAY")').first();
+                if (await loginAnywayButton.isVisible()) {
                     console.log('🔄 Handling session conflict dialog...');
                     await loginAnywayButton.click();
                     await this.page.waitForLoadState('networkidle');
@@ -165,8 +165,8 @@ class DATOneFreightCrawler {
             }
             
             // Look for and click the "SEARCH LOADS" button
-            const searchLoadsButton = await this.page.$('button:has-text("SEARCH LOADS"), a:has-text("SEARCH LOADS")');
-            if (searchLoadsButton) {
+            const searchLoadsButton = await this.page.locator('button:has-text("SEARCH LOADS"), a:has-text("SEARCH LOADS")').first();
+            if (await searchLoadsButton.isVisible()) {
                 console.log('🎯 Found SEARCH LOADS button, clicking...');
                 await searchLoadsButton.click();
                 await this.page.waitForLoadState('networkidle');
@@ -277,8 +277,8 @@ class DATOneFreightCrawler {
             
             for (const selector of searchButtonSelectors) {
                 try {
-                    const searchButton = await this.page.$(selector);
-                    if (searchButton) {
+                    const searchButton = await this.page.locator(selector).first();
+                    if (await searchButton.isVisible()) {
                         console.log(`🔍 Found search button: ${selector}`);
                         await searchButton.click();
                         await this.page.waitForLoadState('networkidle');
@@ -301,19 +301,28 @@ class DATOneFreightCrawler {
         console.log('📊 Extracting freight load data...');
         
         try {
-            // Wait for load results to appear
-            await this.page.waitForSelector('.load-result, .freight-item, .load-card, [data-testid*="load"]', {
+            // Wait for load results to appear - looking for table rows with load data
+            await this.page.waitForSelector('tr, .load-result, .freight-item, .load-card', {
                 timeout: 30000
             });
             
-            // Extract data from load cards
-            const loadElements = await this.page.$$('.load-result, .freight-item, .load-card, [data-testid*="load"]');
+            // Extract data from table rows (DAT One uses a table structure)
+            const loadElements = await this.page.$$('tr:has(td), .load-result, .freight-item, .load-card');
+            
+            console.log(`🔍 Found ${loadElements.length} potential load elements`);
             
             for (const element of loadElements) {
                 try {
-                    const loadData = await this.extractLoadFromElement(element);
-                    if (loadData) {
-                        this.data.push(loadData);
+                    // Check if this row contains actual load data (has company info)
+                    const hasCompanyInfo = await element.evaluate(el => {
+                        return el.querySelector('.company.truncate') !== null;
+                    });
+                    
+                    if (hasCompanyInfo) {
+                        const loadData = await this.extractLoadFromElement(element);
+                        if (loadData && loadData.origin !== 'N/A' && loadData.destination !== 'N/A') {
+                            this.data.push(loadData);
+                        }
                     }
                 } catch (error) {
                     console.warn('⚠️ Failed to extract data from one load element:', error.message);
@@ -333,84 +342,123 @@ class DATOneFreightCrawler {
             // Extract load information from the element
             const loadData = {};
             
-            // Extract origin and destination
-            const routeText = await element.evaluate(el => {
-                const routeElement = el.querySelector('.route, .origin-destination, [data-testid*="route"]');
-                return routeElement ? routeElement.textContent.trim() : '';
+            // Extract origin and destination from the route columns
+            const originText = await element.evaluate(el => {
+                const originElement = el.querySelector('[data-test="origin-city-state"]');
+                return originElement ? originElement.textContent.trim() : '';
             });
             
-            if (routeText.includes(' to ') || routeText.includes(' - ')) {
-                const [origin, destination] = routeText.split(/ to | - /);
-                loadData.origin = origin?.trim() || 'N/A';
-                loadData.destination = destination?.trim() || 'N/A';
-            } else {
-                loadData.origin = 'N/A';
-                loadData.destination = 'N/A';
-            }
-            
-            // Extract equipment type
-            loadData.equipmentType = await element.evaluate(el => {
-                const equipmentElement = el.querySelector('.equipment, .equipment-type, [data-testid*="equipment"]');
-                return equipmentElement ? equipmentElement.textContent.trim() : 'N/A';
+            const destinationText = await element.evaluate(el => {
+                const destinationElement = el.querySelector('[data-test="destination-city-state"]');
+                return destinationElement ? destinationElement.textContent.trim() : '';
             });
             
-            // Extract weight
-            loadData.weight = await element.evaluate(el => {
-                const weightElement = el.querySelector('.weight, .load-weight, [data-testid*="weight"]');
-                return weightElement ? weightElement.textContent.trim() : 'N/A';
+            loadData.origin = originText || 'N/A';
+            loadData.destination = destinationText || 'N/A';
+            
+            // Extract equipment type, weight, length, and load type from the info container
+            const equipmentInfo = await element.evaluate(el => {
+                const infoContainer = el.querySelector('.info-container');
+                if (!infoContainer) return {};
+                
+                const equipmentTypeElement = infoContainer.querySelector('.equipment-type');
+                const spans = infoContainer.querySelectorAll('span');
+                
+                let equipmentType = equipmentTypeElement ? equipmentTypeElement.textContent.trim() : 'N/A';
+                let weight = 'N/A';
+                let length = 'N/A';
+                let loadType = 'N/A';
+                
+                // Parse the pipe-separated values like "V | 42k lbs | 53 ft | Full"
+                for (let i = 0; i < spans.length; i++) {
+                    const text = spans[i].textContent.trim();
+                    if (text.includes('lbs')) {
+                        weight = text;
+                    } else if (text.includes('ft')) {
+                        length = text;
+                    } else if (text === 'Full' || text === 'Partial') {
+                        loadType = text;
+                    }
+                }
+                
+                return { equipmentType, weight, length, loadType };
             });
             
-            // Extract rate information
-            loadData.rate = await element.evaluate(el => {
-                const rateElement = el.querySelector('.rate, .price, .amount, [data-testid*="rate"]');
-                return rateElement ? rateElement.textContent.trim() : 'N/A';
-            });
-            
-            // Extract trip distance
-            loadData.tripDistance = await element.evaluate(el => {
-                const distanceElement = el.querySelector('.distance, .miles, [data-testid*="distance"]');
-                return distanceElement ? distanceElement.textContent.trim() : 'N/A';
-            });
+            loadData.equipmentType = equipmentInfo.equipmentType || 'N/A';
+            loadData.weight = equipmentInfo.weight || 'N/A';
+            loadData.tripDistance = equipmentInfo.length || 'N/A'; // Using length as trip distance for now
+            loadData.loadType = equipmentInfo.loadType || 'N/A';
             
             // Extract company information
             loadData.company = await element.evaluate(el => {
-                const companyElement = el.querySelector('.company, .broker, .shipper, [data-testid*="company"]');
+                const companyElement = el.querySelector('.company.truncate');
                 return companyElement ? companyElement.textContent.trim() : 'N/A';
             });
             
-            // Extract contact information
-            loadData.contactInfo = await element.evaluate(el => {
-                const contactElement = el.querySelector('.contact, .phone, .email, [data-testid*="contact"]');
-                return contactElement ? contactElement.textContent.trim() : 'N/A';
-            });
-            
-            // Extract load requirements
-            loadData.loadRequirements = await element.evaluate(el => {
-                const reqElement = el.querySelector('.requirements, .load-requirements, [data-testid*="requirements"]');
-                return reqElement ? reqElement.textContent.trim() : 'N/A';
-            });
-            
-            // Extract pickup and delivery dates
-            loadData.pickupDate = await element.evaluate(el => {
-                const pickupElement = el.querySelector('.pickup-date, .pickup, [data-testid*="pickup"]');
-                return pickupElement ? pickupElement.textContent.trim() : 'N/A';
-            });
-            
-            loadData.deliveryDate = await element.evaluate(el => {
-                const deliveryElement = el.querySelector('.delivery-date, .delivery, [data-testid*="delivery"]');
-                return deliveryElement ? deliveryElement.textContent.trim() : 'N/A';
-            });
-            
-            // Extract load type (Full/Partial)
-            loadData.loadType = await element.evaluate(el => {
-                const typeElement = el.querySelector('.load-type, .type, [data-testid*="type"]');
-                return typeElement ? typeElement.textContent.trim() : 'N/A';
+            // Extract rate information from the rate column
+            loadData.rate = await element.evaluate(el => {
+                // Look for rate in various possible locations
+                const rateSelectors = [
+                    '[data-test="rate"]',
+                    '.rate',
+                    '.price',
+                    '.amount',
+                    'td:nth-child(3)', // Assuming rate is in 3rd column based on table structure
+                    'td:contains("$")'
+                ];
+                
+                for (const selector of rateSelectors) {
+                    const rateElement = el.querySelector(selector);
+                    if (rateElement && rateElement.textContent.includes('$')) {
+                        return rateElement.textContent.trim();
+                    }
+                }
+                return 'N/A';
             });
             
             // Extract age of posting
             loadData.agePosted = await element.evaluate(el => {
-                const ageElement = el.querySelector('.age, .posted, .time-posted, [data-testid*="age"]');
-                return ageElement ? ageElement.textContent.trim() : 'N/A';
+                const ageSelectors = [
+                    '[data-test="age"]',
+                    '.age',
+                    'td:first-child', // Age is typically in first column
+                    'td:contains("h")', // Hours
+                    'td:contains("m")' // Minutes
+                ];
+                
+                for (const selector of ageSelectors) {
+                    const ageElement = el.querySelector(selector);
+                    if (ageElement) {
+                        const text = ageElement.textContent.trim();
+                        if (text.match(/^\d+[hm]$/)) { // Matches patterns like "9h" or "10m"
+                            return text;
+                        }
+                    }
+                }
+                return 'N/A';
+            });
+            
+            // Extract contact information - may not be directly visible in list view
+            loadData.contactInfo = await element.evaluate(el => {
+                const contactElement = el.querySelector('.contact, .phone, .email');
+                return contactElement ? contactElement.textContent.trim() : 'N/A';
+            });
+            
+            // Extract load requirements - may not be directly visible in list view
+            loadData.loadRequirements = await element.evaluate(el => {
+                const reqElement = el.querySelector('.requirements, .load-requirements');
+                return reqElement ? reqElement.textContent.trim() : 'N/A';
+            });
+            
+            // Extract pickup and delivery dates - may not be directly visible in list view
+            loadData.pickupDate = await element.evaluate(el => {
+                const pickupElement = el.querySelector('.pickup-date, .pickup');
+                return pickupElement ? pickupElement.textContent.trim() : 'N/A';
+            });
+            
+            loadData.deliveryDate = await element.evaluate(el => {
+                const deliveryElement = el.querySelector('.delivery-date, .delivery');
+                return deliveryElement ? deliveryElement.textContent.trim() : 'N/A';
             });
             
             // Add extraction timestamp

@@ -1,0 +1,10 @@
+{
+  "url": "https://www.dat.com/login",
+  "selectors": {
+    "origin": "input[placeholder*=\"origin\" i]",
+    "destination": "input[placeholder*=\"destination\" i]",
+    "equipment": "select[name*=\"equipment\" i]",
+    "searchButton": "#button-addon2",
+    "loadElements": "[class*=\"load\"]"
+  }
+}
