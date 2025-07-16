@@ -1,0 +1,26 @@
+{
+  "name": "dat-one-freight-crawler",
+  "version": "1.0.0",
+  "description": "Webcrawler for DAT ONE freight platform using Playwright",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "crawl": "HEADLESS=false node src/index.js",
+    "save-session": "node src/save-session.js",
+    "save-session-updated": "node src/save-session-updated.js",
+    "test": "playwright test",
+    "install-browsers": "playwright install"
+  },
+  "keywords": ["webcrawler", "playwright", "freight", "dat-one", "logistics", "transportation"],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "playwright": "^1.40.0",
+    "dotenv": "^16.3.1",
+    "csv-writer": "^1.6.0",
+    "commander": "^11.1.0"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.40.0"
+  }
+} 
