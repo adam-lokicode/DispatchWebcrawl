@@ -1,0 +1,45 @@
+origin,destination,rate_total_usd,rate_per_mile,company,contact,age_posted,extracted_at
+"San Leandro, CA","Loveland, CO",,,Olympic Transportation Services Inc,loads@olympiatransportation.mail.parade.ai,55m,2025-07-27T18:59:37.990Z
+"San Leandro, CA","Loveland, CO",2801,2.28,J B Hunt Transport Inc,(877) 628-3894,58m,2025-07-27T18:59:46.991Z
+"Fresno, CA","Loveland, CO",2900,2.44,California Freight Sales,loads@calfreight.mail.parade.ai,59m,2025-07-27T18:59:53.322Z
+"Fresno, CA","Colorado Spgs, CO",1500,1.24,Globaltranz/Afn,loaddetails@wwex.com,1h,2025-07-27T19:00:00.298Z
+"American Cyn, CA","Littleton, CO",2700,2.17,California Freight Sales,loads@calfreight.mail.parade.ai,1h,2025-07-27T19:00:06.775Z
+"Fernley, NV","Aurora, CO",2280,2.24,ELI,loadpostings@elberta.net,1h,2025-07-27T19:00:12.367Z
+"Fernley, NV","Aurora, CO",2280,2.24,ELI,loadpostings@elberta.net,1h,2025-07-27T19:00:18.396Z
+"San Leandro, CA","Aurora, CO",,,Uber Freight LLC,(628) 236-8343,1h,2025-07-27T19:00:26.727Z
+"Lodi, CA","Aurora, CO",,,Uber Freight LLC,(628) 236-8343,1h,2025-07-27T19:00:33.031Z
+"Fernley, NV","Aurora, CO",2600,2.55,Navajo Express Inc / DSCO Logistics,(720) 853-4699,1h,2025-07-27T19:00:50.569Z
+"W Sacramento, CA","Pueblo, CO",2531,1.96,Nolan Transportation Group Inc,westmatches@ntgfreight.com,1h,2025-07-27T19:00:56.544Z
+"Corcoran, CA","Denver, CO",2619,2.39,Nolan Transportation Group Inc,westmatches@ntgfreight.com,1h,2025-07-27T19:01:04.164Z
+"Fernley, NV","Aurora, CO",1900,1.86,ELI,loadpostings@elberta.net,1h,2025-07-27T19:01:09.162Z
+"W Sacramento, CA","Loveland, CO",2837,2.48,Nolan Transportation Group Inc,westmatches@ntgfreight.com,1h,2025-07-27T19:01:15.611Z
+"Fresno, CA","Colorado Spgs, CO",1500,1.24,Globaltranz/Afn,(224) 515-7265,1h,2025-07-27T19:01:22.856Z
+"McKinleyville, CA","Colorado Spgs, CO",1250,0.79,Globaltranz/Afn,(224) 515-7265,1h,2025-07-27T19:01:29.894Z
+"Fresno, CA","Fountain, CO",2544,2.08,J B Hunt Transport Inc,(800) 723-0837,1h,2025-07-27T19:01:35.877Z
+"Bakersfield, CA","Douglas, WY",,,RXO Capacity Solutions LLC,(623) 469-4122,1h,2025-07-27T19:01:42.062Z
+"Fresno, CA","Denver, CO",2601,2.28,GSR BROKERAGE INC,dispatch@gsrbrokerage.us,1h,2025-07-27T19:01:51.948Z
+"Reno, NV","Aurora, CO",1500,1.43,Axle Logistics LLC,tanner.cox@axlelogistics.com,1h,2025-07-27T19:02:00.620Z
+"Oroville, CA","Ft Collins, CO",2700,2.42,Echo Global Logistics Inc,(231) 499-2268,1h,2025-07-27T19:02:06.706Z
+"Minden, NV","Aurora, CO",,,RXO Capacity Solutions LLC,(872) 282-5528,1h,2025-07-27T19:02:12.257Z
+"Chico, CA","Aurora, CO",2995,2.44,HUB GROUP INC,(410) 673-1240 x855,1h,2025-07-27T19:02:16.952Z
+"Chico, CA","Aurora, CO",2995,2.44,HUB GROUP INC,(410) 673-1240 x855,1h,2025-07-27T19:02:22.593Z
+"Chico, CA","Aurora, CO",3000,2.46,HUB Group Inc - Pittsburgh,(410) 673-1240 x855,1h,2025-07-27T19:02:28.926Z
+"Chico, CA","Aurora, CO",2745,2.23,HUB Group Inc - Pittsburgh,(410) 673-1240 x855,1h,2025-07-27T19:02:39.459Z
+"Shafter, CA","Aurora, CO",,,Ryan Transportation Service Inc,(913) 553-5501,1h,2025-07-27T19:02:46.642Z
+"Shafter, CA","Aurora, CO",,,Ryan Transportation Service Inc,(913) 553-5501,1h,2025-07-27T19:02:54.478Z
+"Sebastopol, CA","Johnstown, CO",2250,1.8,Exodus Logistix Inc,(918) 303-5777,1h,2025-07-27T19:02:59.490Z
+"Fallon, NV","Aurora, CO",,,Watco Supply Chain Services,(479) 717-6698,1h,2025-07-27T19:03:06.283Z
+"Shasta Lake, CA","Denver, CO",3000,2.4,T A Services Inc Formerly Team America Inc,sstephens@taservices.com,1h,2025-07-27T19:03:14.462Z
+"W Sacramento, CA","Loveland, CO",2831,2.48,Nolan Transportation Group Inc,(770) 509-9611,3h,2025-07-27T19:03:22.970Z
+"W Sacramento, CA","Pueblo, CO",2532,1.96,Nolan Transportation Group Inc,(770) 509-9611,3h,2025-07-27T19:03:35.237Z
+"Corcoran, CA","Denver, CO",2619,2.39,Nolan Transportation Group Inc,(770) 509-9611,3h,2025-07-27T19:03:40.279Z
+"Visalia, CA","Aurora, CO",,,Bison Transport USA,SHill@bisontransport.com,6h,2025-07-27T19:03:46.352Z
+"Fremont, CA","Aurora, CO",1180,0.92,Flock Freight Inc,(858) 258-9762,1d,2025-07-27T19:03:51.815Z
+"Fremont, CA","Aurora, CO",1180,0.92,Flock Freight Inc,(858) 293-5482,1d,2025-07-27T19:03:58.080Z
+"Benicia, CA","Torrington, WY",,,Star American Freight Brokers Inc,dispatch@staramericanfreight.com,1d,2025-07-27T19:04:07.289Z
+"Modesto, CA","Aurora, CO",2700,2.15,Prosponsive Logistics,(800) 533-3922 x4016,1d,2025-07-27T19:04:13.821Z
+"Visalia, CA","Commerce City, CO",,,Werner Enterprises Inc,agarrett@werner.com,1d,2025-07-27T19:04:19.916Z
+"Fresno, CA","Aurora, CO",,,STG Logistics/Best Dedicated Solutions,(224) 206-7576,1d,2025-07-27T19:04:27.952Z
+"Corcoran, CA","Colorado Spgs, CO",,,Corporate Traffic Inc,(904) 720-2936,1d,2025-07-27T19:04:36.179Z
+"Fernley, NV","Aurora, CO",2300,2.26,Amx Logistics,jboyd@amxtrucking.com,1d,2025-07-27T19:04:41.441Z
+"Sacramento, CA","Denver, CO",2500,2.12,Total Quality Logistics Inc,(800) 580-3101 x55328,1d,2025-07-27T19:04:48.249Z

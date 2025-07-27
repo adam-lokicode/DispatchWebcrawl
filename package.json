@@ -18,16 +18,24 @@
     "test": "playwright test",
     "install-browsers": "playwright install"
   },
-  "keywords": ["webcrawler", "playwright", "freight", "dat-one", "logistics", "transportation"],
+  "keywords": [
+    "webcrawler",
+    "playwright",
+    "freight",
+    "dat-one",
+    "logistics",
+    "transportation"
+  ],
   "author": "",
   "license": "MIT",
   "dependencies": {
-    "playwright": "^1.40.0",
-    "dotenv": "^16.3.1",
+    "axios": "^1.11.0",
+    "commander": "^11.1.0",
     "csv-writer": "^1.6.0",
-    "commander": "^11.1.0"
+    "dotenv": "^16.3.1",
+    "playwright": "^1.40.0"
   },
   "devDependencies": {
     "@playwright/test": "^1.40.0"
   }
-} 
+}
