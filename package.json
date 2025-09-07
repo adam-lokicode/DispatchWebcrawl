@@ -10,13 +10,32 @@
     "scrape": "node src/interactive-scraper.js",
     "simple": "node src/simple-scraper.js",
     "connect": "node src/connect-existing-browser.js",
+    "scheduled": "node src/scheduled-scraper.js",
+    "silent": "node src/silent-scheduled-scraper.js",
+    "nuclear": "node src/nuclear-silent-scraper.js",
+    "ultra": "node src/ultra-safe-scraper.js",
+    "minimal": "node src/minimal-scraper.js",
+    "fixed": "node src/fixed-scraper.js",
     "page": "node src/extract-page-content.js",
     "save-session": "node src/save-session.js",
     "save-session-updated": "node src/save-session-updated.js",
     "find-selectors": "node src/find-selectors.js",
     "step-by-step": "node src/step-by-step-guide.js",
     "test": "playwright test",
-    "install-browsers": "playwright install"
+    "install-browsers": "playwright install",
+    "localhost": "./scripts/run-localhost.sh",
+    "localhost:manual": "./scripts/start-chrome-debug.sh",
+    "localhost:auto": "node src/localhost-scraper.js",
+    "gcp:deploy": "./scripts/deploy-gcp-automated.sh",
+    "production": "node src/production-scraper.js",
+    "dev": "NODE_ENV=development node src/production-scraper.js",
+    "docker:build": "docker build -t dispatch-webcrawl .",
+    "docker:run": "docker-compose up -d",
+    "docker:stop": "docker-compose down",
+    "docker:logs": "docker-compose logs -f scraper",
+    "test:health": "curl -f http://localhost:8080/health",
+    "setup": "./scripts/local-setup.sh",
+    "deploy:gcp": "./scripts/deploy-gcp.sh"
   },
   "keywords": [
     "webcrawler",
@@ -31,9 +50,12 @@
   "dependencies": {
     "axios": "^1.11.0",
     "commander": "^11.1.0",
+    "csv-parser": "^3.2.0",
     "csv-writer": "^1.6.0",
     "dotenv": "^16.3.1",
-    "playwright": "^1.40.0"
+    "googleapis": "^159.0.0",
+    "playwright": "^1.40.0",
+    "selenium-webdriver": "^4.35.0"
   },
   "devDependencies": {
     "@playwright/test": "^1.40.0"
