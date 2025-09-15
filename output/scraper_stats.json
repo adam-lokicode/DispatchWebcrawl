@@ -1,0 +1,22 @@
+{
+  "totalRuns": 1,
+  "totalEntriesCrawled": 29,
+  "totalNewEntriesAdded": 29,
+  "totalDuplicatesSkipped": 0,
+  "firstRun": "2025-07-28T04:26:27.327Z",
+  "lastRun": "2025-07-28T04:26:27.327Z",
+  "averageEntriesPerRun": 29,
+  "averageNewEntriesPerRun": 29,
+  "runs": [
+    {
+      "timestamp": "2025-07-28T04:26:27.327Z",
+      "duration": 134,
+      "entriesCrawled": 29,
+      "newEntriesAdded": 29,
+      "duplicatesSkipped": 0,
+      "totalRecordsInFile": 29,
+      "contactsFound": 29,
+      "referenceNumbersFound": 29
+    }
+  ]
+}

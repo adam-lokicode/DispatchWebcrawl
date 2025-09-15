@@ -35,7 +35,11 @@
     "docker:logs": "docker-compose logs -f scraper",
     "test:health": "curl -f http://localhost:8080/health",
     "setup": "./scripts/local-setup.sh",
-    "deploy:gcp": "./scripts/deploy-gcp.sh"
+    "deploy:gcp": "./scripts/deploy-gcp.sh",
+    "ai-scrape": "node src/ai-enhanced-scraper.js",
+    "ai-interactive": "node src/interactive-ai-scraper.js",
+    "ai-localhost": "node src/ai-localhost-scraper.js",
+    "ai-session": "node src/ai-session-scraper.js"
   },
   "keywords": [
     "webcrawler",
@@ -54,8 +58,11 @@
     "csv-writer": "^1.6.0",
     "dotenv": "^16.3.1",
     "googleapis": "^159.0.0",
+    "openai": "^4.28.0",
     "playwright": "^1.40.0",
-    "selenium-webdriver": "^4.35.0"
+    "selenium-webdriver": "^4.35.0",
+    "sqlite": "^5.1.1",
+    "sqlite3": "^5.1.6"
   },
   "devDependencies": {
     "@playwright/test": "^1.40.0"

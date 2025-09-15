@@ -1,0 +1,118 @@
+version: "3.8"
+
+services:
+  # Chrome browser service for Playwright to connect to
+  chrome:
+    image: browserless/chrome:latest
+    container_name: scraper-chrome
+    restart: unless-stopped
+    ports:
+      - "9222:3000"
+    environment:
+      - CONCURRENT=1
+      - TOKEN=your-security-token-here
+      - ENABLE_DEBUGGER=true
+      - MAX_CONCURRENT_SESSIONS=1
+      - FUNCTION_ENABLE_INCOGNITO_MODE=true
+      - KEEP_ALIVE=true
+      - PREBOOT_CHROME=true
+    mem_limit: 1g
+    mem_reservation: 512m
+    cpus: 1.0
+    security_opt:
+      - seccomp:unconfined
+    networks:
+      - scraper-network
+    volumes:
+      - chrome-data:/tmp
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # Production scraper service
+  scraper:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: production
+    container_name: scraper-app
+    restart: unless-stopped
+    depends_on:
+      chrome:
+        condition: service_healthy
+    ports:
+      - "8080:8080"
+    environment:
+      - NODE_ENV=production
+      - HEADLESS=true
+      - LOG_LEVEL=info
+      - HEALTH_CHECK_PORT=8080
+      - CHROME_CDP_URL=http://chrome:3000
+    mem_limit: 512m
+    mem_reservation: 256m
+    cpus: 0.5
+    networks:
+      - scraper-network
+    volumes:
+      - ./output:/app/output
+      - ./logs:/app/logs
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  # Development scraper service (commented out by default)
+  # scraper-dev:
+  #   build:
+  #     context: .
+  #     dockerfile: Dockerfile
+  #     target: development
+  #   container_name: scraper-dev
+  #   ports:
+  #     - "8081:8080"
+  #     - "9223:9222"
+  #   environment:
+  #     - NODE_ENV=development
+  #     - HEADLESS=false
+  #     - LOG_LEVEL=debug
+  #   volumes:
+  #     - .:/app
+  #     - /app/node_modules
+  #   networks:
+  #     - scraper-network
+  #   command: ["npm", "run", "dev"]
+
+  # Monitoring service (optional - Prometheus metrics)
+  # monitoring:
+  #   image: prom/prometheus:latest
+  #   container_name: scraper-monitoring
+  #   ports:
+  #     - "9090:9090"
+  #   volumes:
+  #     - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml
+  #   networks:
+  #     - scraper-network
+  #   command:
+  #     - '--config.file=/etc/prometheus/prometheus.yml'
+  #     - '--storage.tsdb.path=/prometheus'
+
+networks:
+  scraper-network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16
+
+volumes:
+  chrome-data:
+    driver: local

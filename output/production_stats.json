@@ -1,0 +1,1421 @@
+{
+  "service": "production-scraper",
+  "totalRuns": 1344,
+  "totalEntriesCrawled": 1711,
+  "totalNewEntriesAdded": 746,
+  "totalDuplicatesSkipped": 965,
+  "totalErrors": 984,
+  "firstRun": "2025-08-17T05:49:16.076Z",
+  "lastRun": "2025-09-06T23:24:19.114Z",
+  "averageEntriesPerRun": 1.27,
+  "averageNewEntriesPerRun": 0.56,
+  "averageRunDuration": 25485,
+  "successRate": 27,
+  "runs": [
+    {
+      "timestamp": "2025-09-06T23:24:19.114Z",
+      "duration": 9130,
+      "entriesCrawled": 0,
+      "newEntriesAdded": 0,
+      "duplicatesSkipped": 0,
+      "error": "page.waitForSelector: Target page, context or browser has been closed",
+      "memoryUsage": {
+        "rss": 95,
+        "heapTotal": 40,
+        "heapUsed": 37,
+        "external": 3
+      }
+    },
+    {
+      "timestamp": "2025-09-06T23:23:49.114Z",
+      "duration": 22665,
+      "entriesCrawled": 0,
+      "newEntriesAdded": 0,
+      "duplicatesSkipped": 0,
+      "error": "page.waitForSelector: Timeout 6250ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('.row-container') to be visible\u001b[22m\n",
+      "memoryUsage": {
+        "rss": 90,
+        "heapTotal": 36,
+        "heapUsed": 33,
+        "external": 3
+      }
+    },
+    {
+      "timestamp": "2025-09-06T23:23:19.113Z",
+      "duration": 22344,
+      "entriesCrawled": 0,
+      "newEntriesAdded": 0,
+      "duplicatesSkipped": 0,
+      "error": "page.waitForSelector: Timeout 6250ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('.row-container') to be visible\u001b[22m\n",
+      "memoryUsage": {
+        "rss": 68,
+        "heapTotal": 46,
+        "heapUsed": 29,
+        "external": 3
+      }
+    },
+    {
+      "timestamp": "2025-09-06T23:22:49.112Z",
+      "duration": 18756,
+      "entriesCrawled": 0,
+      "newEntriesAdded": 0,
+      "duplicatesSkipped": 0,
+      "error": "page.waitForSelector: Timeout 6250ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('.row-container') to be visible\u001b[22m\n",
+      "memoryUsage": {
+        "rss": 42,
+        "heapTotal": 29,
+        "heapUsed": 23,
+        "external": 3
+      }
+    },
+    {
+      "timestamp": "2025-09-06T23:22:19.110Z",
+      "duration": 18755,
+      "entriesCrawled": 0,
+      "newEntriesAdded": 0,
+      "duplicatesSkipped": 0,
+      "error": "page.waitForSelector: Timeout 6250ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('.row-container') to be visible\u001b[22m\n",
+      "memoryUsage": {
+        "rss": 42,
+        "heapTotal": 29,
+        "heapUsed": 23,
+        "external": 3
+      }
+    },
+    {
+      "timestamp": "2025-09-06T23:21:49.109Z",
+      "duration": 18760,
+      "entriesCrawled": 0,
+      "newEntriesAdded": 0,
+      "duplicatesSkipped": 0,
+      "error": "page.waitForSelector: Timeout 6250ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('.row-container') to be visible\u001b[22m\n",
+      "memoryUsage": {
+        "rss": 42,
+        "heapTotal": 29,
+        "heapUsed": 23,
+        "external": 3
+      }
+    },
+    {
+      "timestamp": "2025-09-06T23:21:19.109Z",
+      "duration": 18760,
+      "entriesCrawled": 0,
+      "newEntriesAdded": 0,
+      "duplicatesSkipped": 0,
+      "error": "page.waitForSelector: Timeout 6250ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('.row-container') to be visible\u001b[22m\n",
+      "memoryUsage": {
+        "rss": 41,
+        "heapTotal": 29,
+        "heapUsed": 23,
+        "external": 3
+      }
+    },
+    {
+      "timestamp": "2025-09-06T23:20:49.107Z",
+      "duration": 18756,
+      "entriesCrawled": 0,
+      "newEntriesAdded": 0,
+      "duplicatesSkipped": 0,
+      "error": "page.waitForSelector: Timeout 6250ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('.row-container') to be visible\u001b[22m\n",
+      "memoryUsage": {
+        "rss": 41,
+        "heapTotal": 29,
+        "heapUsed": 23,
+        "external": 3
+      }
+    },
+    {
+      "timestamp": "2025-09-06T23:20:19.106Z",
+      "duration": 18755,
+      "entriesCrawled": 0,
+      "newEntriesAdded": 0,
+      "duplicatesSkipped": 0,
+      "error": "page.waitForSelector: Timeout 6250ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('.row-container') to be visible\u001b[22m\n",
+      "memoryUsage": {
+        "rss": 41,
+        "heapTotal": 29,
+        "heapUsed": 23,
+        "external": 3
+      }
+    },
+    {
+      "timestamp": "2025-09-06T23:19:49.104Z",
+      "duration": 18756,
+      "entriesCrawled": 0,
+      "newEntriesAdded": 0,
+      "duplicatesSkipped": 0,
+      "error": "page.waitForSelector: Timeout 6250ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('.row-container') to be visible\u001b[22m\n",
+      "memoryUsage": {
+        "rss": 41,
+        "heapTotal": 29,
+        "heapUsed": 23,
+        "external": 3
+      }
+    },
+    {
+      "timestamp": "2025-09-06T23:19:19.103Z",
+      "duration": 18755,
+      "entriesCrawled": 0,
+      "newEntriesAdded": 0,
+      "duplicatesSkipped": 0,
+      "error": "page.waitForSelector: Timeout 6250ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('.row-container') to be visible\u001b[22m\n",
+      "memoryUsage": {
+        "rss": 40,
+        "heapTotal": 29,
+        "heapUsed": 23,
+        "external": 3
+      }
+    },
+    {
+      "timestamp": "2025-09-06T23:18:49.102Z",
+      "duration": 18752,
+      "entriesCrawled": 0,
+      "newEntriesAdded": 0,
+      "duplicatesSkipped": 0,
+      "error": "page.waitForSelector: Timeout 6250ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('.row-container') to be visible\u001b[22m\n",
+      "memoryUsage": {
+        "rss": 40,
+        "heapTotal": 29,
+        "heapUsed": 23,
+        "external": 3
+      }
+    },
+    {
+      "timestamp": "2025-09-06T23:18:19.101Z",
+      "duration": 18756,
+      "entriesCrawled": 0,
+      "newEntriesAdded": 0,
+      "duplicatesSkipped": 0,
+      "error": "page.waitForSelector: Timeout 6250ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('.row-container') to be visible\u001b[22m\n",
+      "memoryUsage": {
+        "rss": 39,
+        "heapTotal": 29,
+        "heapUsed": 22,
+        "external": 3
+      }
+    },
+    {
+      "timestamp": "2025-09-06T23:17:49.100Z",
+      "duration": 18754,
+      "entriesCrawled": 0,
+      "newEntriesAdded": 0,
+      "duplicatesSkipped": 0,
+      "error": "page.waitForSelector: Timeout 6250ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('.row-container') to be visible\u001b[22m\n",
+      "memoryUsage": {
+        "rss": 41,
+        "heapTotal": 29,
+        "heapUsed": 22,
+        "external": 3
+      }
+    },
+    {
+      "timestamp": "2025-09-06T23:17:19.098Z",
+      "duration": 18756,
+      "entriesCrawled": 0,
+      "newEntriesAdded": 0,
+      "duplicatesSkipped": 0,
+      "error": "page.waitForSelector: Timeout 6250ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('.row-container') to be visible\u001b[22m\n",
+      "memoryUsage": {
+        "rss": 44,
+        "heapTotal": 29,
+        "heapUsed": 22,
+        "external": 3
+      }
+    },
+    {
+      "timestamp": "2025-09-06T23:16:49.096Z",
+      "duration": 18753,
+      "entriesCrawled": 0,
+      "newEntriesAdded": 0,
+      "duplicatesSkipped": 0,
+      "error": "page.waitForSelector: Timeout 6250ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('.row-container') to be visible\u001b[22m\n",
+      "memoryUsage": {
+        "rss": 43,
+        "heapTotal": 29,
+        "heapUsed": 22,
+        "external": 3
+      }
+    },
+    {
+      "timestamp": "2025-09-06T23:16:19.095Z",
+      "duration": 18755,
+      "entriesCrawled": 0,
+      "newEntriesAdded": 0,
+      "duplicatesSkipped": 0,
+      "error": "page.waitForSelector: Timeout 6250ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('.row-container') to be visible\u001b[22m\n",
+      "memoryUsage": {
+        "rss": 39,
+        "heapTotal": 29,
+        "heapUsed": 22,
+        "external": 3
+      }
+    },
+    {
+      "timestamp": "2025-09-06T23:15:49.092Z",
+      "duration": 18758,
+      "entriesCrawled": 0,
+      "newEntriesAdded": 0,
+      "duplicatesSkipped": 0,
+      "error": "page.waitForSelector: Timeout 6250ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('.row-container') to be visible\u001b[22m\n",
+      "memoryUsage": {
+        "rss": 53,
+        "heapTotal": 29,
+        "heapUsed": 22,
+        "external": 3
+      }
+    },
+    {
+      "timestamp": "2025-09-06T23:15:19.091Z",
+      "duration": 18757,
+      "entriesCrawled": 0,
+      "newEntriesAdded": 0,
+      "duplicatesSkipped": 0,
+      "error": "page.waitForSelector: Timeout 6250ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('.row-container') to be visible\u001b[22m\n",
+      "memoryUsage": {
+        "rss": 53,
+        "heapTotal": 29,
+        "heapUsed": 22,
+        "external": 2
+      }
+    },
+    {
+      "timestamp": "2025-09-06T23:14:49.089Z",
+      "duration": 18756,
+      "entriesCrawled": 0,
+      "newEntriesAdded": 0,
+      "duplicatesSkipped": 0,
+      "error": "page.waitForSelector: Timeout 6250ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('.row-container') to be visible\u001b[22m\n",
+      "memoryUsage": {
+        "rss": 52,
+        "heapTotal": 29,
+        "heapUsed": 21,
+        "external": 2
+      }
+    },
+    {
+      "timestamp": "2025-09-06T23:14:19.088Z",
+      "duration": 18752,
+      "entriesCrawled": 0,
+      "newEntriesAdded": 0,
+      "duplicatesSkipped": 0,
+      "error": "page.waitForSelector: Timeout 6250ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('.row-container') to be visible\u001b[22m\n",
+      "memoryUsage": {
+        "rss": 55,
+        "heapTotal": 29,
+        "heapUsed": 21,
+        "external": 2
+      }
+    },
+    {
+      "timestamp": "2025-09-06T23:13:49.087Z",
+      "duration": 18753,
+      "entriesCrawled": 0,
+      "newEntriesAdded": 0,
+      "duplicatesSkipped": 0,
+      "error": "page.waitForSelector: Timeout 6250ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('.row-container') to be visible\u001b[22m\n",
+      "memoryUsage": {
+        "rss": 44,
+        "heapTotal": 31,
+        "heapUsed": 27,
+        "external": 4
+      }
+    },
+    {
+      "timestamp": "2025-09-06T23:13:19.086Z",
+      "duration": 18754,
+      "entriesCrawled": 0,
+      "newEntriesAdded": 0,
+      "duplicatesSkipped": 0,
+      "error": "page.waitForSelector: Timeout 6250ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('.row-container') to be visible\u001b[22m\n",
+      "memoryUsage": {
+        "rss": 44,
+        "heapTotal": 31,
+        "heapUsed": 27,
+        "external": 4
+      }
+    },
+    {
+      "timestamp": "2025-09-06T23:12:49.086Z",
+      "duration": 18755,
+      "entriesCrawled": 0,
+      "newEntriesAdded": 0,
+      "duplicatesSkipped": 0,
+      "error": "page.waitForSelector: Timeout 6250ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('.row-container') to be visible\u001b[22m\n",
+      "memoryUsage": {
+        "rss": 44,
+        "heapTotal": 31,
+        "heapUsed": 28,
+        "external": 4
+      }
+    },
+    {
+      "timestamp": "2025-09-06T23:12:19.085Z",
+      "duration": 18753,
+      "entriesCrawled": 0,
+      "newEntriesAdded": 0,
+      "duplicatesSkipped": 0,
+      "error": "page.waitForSelector: Timeout 6250ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('.row-container') to be visible\u001b[22m\n",
+      "memoryUsage": {
+        "rss": 44,
+        "heapTotal": 31,
+        "heapUsed": 28,
+        "external": 4
+      }
+    },
+    {
+      "timestamp": "2025-09-06T23:11:49.084Z",
+      "duration": 18755,
+      "entriesCrawled": 0,
+      "newEntriesAdded": 0,
+      "duplicatesSkipped": 0,
+      "error": "page.waitForSelector: Timeout 6250ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('.row-container') to be visible\u001b[22m\n",
+      "memoryUsage": {
+        "rss": 44,
+        "heapTotal": 31,
+        "heapUsed": 28,
+        "external": 4
+      }
+    },
+    {
+      "timestamp": "2025-09-06T23:11:19.084Z",
+      "duration": 18758,
+      "entriesCrawled": 0,
+      "newEntriesAdded": 0,
+      "duplicatesSkipped": 0,
+      "error": "page.waitForSelector: Timeout 6250ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('.row-container') to be visible\u001b[22m\n",
+      "memoryUsage": {
+        "rss": 44,
+        "heapTotal": 32,
+        "heapUsed": 27,
+        "external": 4
+      }
+    },
+    {
+      "timestamp": "2025-09-06T23:10:49.082Z",
+      "duration": 18757,
+      "entriesCrawled": 0,
+      "newEntriesAdded": 0,
+      "duplicatesSkipped": 0,
+      "error": "page.waitForSelector: Timeout 6250ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('.row-container') to be visible\u001b[22m\n",
+      "memoryUsage": {
+        "rss": 44,
+        "heapTotal": 31,
+        "heapUsed": 27,
+        "external": 4
+      }
+    },
+    {
+      "timestamp": "2025-09-06T23:10:19.080Z",
+      "duration": 18753,
+      "entriesCrawled": 0,
+      "newEntriesAdded": 0,
+      "duplicatesSkipped": 0,
+      "error": "page.waitForSelector: Timeout 6250ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('.row-container') to be visible\u001b[22m\n",
+      "memoryUsage": {
+        "rss": 44,
+        "heapTotal": 31,
+        "heapUsed": 27,
+        "external": 4
+      }
+    },
+    {
+      "timestamp": "2025-09-06T23:09:49.079Z",
+      "duration": 18756,
+      "entriesCrawled": 0,
+      "newEntriesAdded": 0,
+      "duplicatesSkipped": 0,
+      "error": "page.waitForSelector: Timeout 6250ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('.row-container') to be visible\u001b[22m\n",
+      "memoryUsage": {
+        "rss": 44,
+        "heapTotal": 31,
+        "heapUsed": 27,
+        "external": 4
+      }
+    },
+    {
+      "timestamp": "2025-09-06T23:09:19.078Z",
+      "duration": 18755,
+      "entriesCrawled": 0,
+      "newEntriesAdded": 0,
+      "duplicatesSkipped": 0,
+      "error": "page.waitForSelector: Timeout 6250ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('.row-container') to be visible\u001b[22m\n",
+      "memoryUsage": {
+        "rss": 44,
+        "heapTotal": 32,
+        "heapUsed": 27,
+        "external": 4
+      }
+    },
+    {
+      "timestamp": "2025-09-06T23:08:49.077Z",
+      "duration": 18758,
+      "entriesCrawled": 0,
+      "newEntriesAdded": 0,
+      "duplicatesSkipped": 0,
+      "error": "page.waitForSelector: Timeout 6250ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('.row-container') to be visible\u001b[22m\n",
+      "memoryUsage": {
+        "rss": 43,
+        "heapTotal": 31,
+        "heapUsed": 27,
+        "external": 4
+      }
+    },
+    {
+      "timestamp": "2025-09-06T23:08:19.077Z",
+      "duration": 18752,
+      "entriesCrawled": 0,
+      "newEntriesAdded": 0,
+      "duplicatesSkipped": 0,
+      "error": "page.waitForSelector: Timeout 6250ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('.row-container') to be visible\u001b[22m\n",
+      "memoryUsage": {
+        "rss": 44,
+        "heapTotal": 31,
+        "heapUsed": 27,
+        "external": 4
+      }
+    },
+    {
+      "timestamp": "2025-09-06T23:07:49.075Z",
+      "duration": 18754,
+      "entriesCrawled": 0,
+      "newEntriesAdded": 0,
+      "duplicatesSkipped": 0,
+      "error": "page.waitForSelector: Timeout 6250ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('.row-container') to be visible\u001b[22m\n",
+      "memoryUsage": {
+        "rss": 44,
+        "heapTotal": 31,
+        "heapUsed": 27,
+        "external": 4
+      }
+    },
+    {
+      "timestamp": "2025-09-06T23:07:19.075Z",
+      "duration": 18759,
+      "entriesCrawled": 0,
+      "newEntriesAdded": 0,
+      "duplicatesSkipped": 0,
+      "error": "page.waitForSelector: Timeout 6250ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('.row-container') to be visible\u001b[22m\n",
+      "memoryUsage": {
+        "rss": 44,
+        "heapTotal": 32,
+        "heapUsed": 26,
+        "external": 4
+      }
+    },
+    {
+      "timestamp": "2025-09-06T23:06:49.073Z",
+      "duration": 18754,
+      "entriesCrawled": 0,
+      "newEntriesAdded": 0,
+      "duplicatesSkipped": 0,
+      "error": "page.waitForSelector: Timeout 6250ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('.row-container') to be visible\u001b[22m\n",
+      "memoryUsage": {
+        "rss": 41,
+        "heapTotal": 31,
+        "heapUsed": 27,
+        "external": 4
+      }
+    },
+    {
+      "timestamp": "2025-09-06T23:06:19.071Z",
+      "duration": 18754,
+      "entriesCrawled": 0,
+      "newEntriesAdded": 0,
+      "duplicatesSkipped": 0,
+      "error": "page.waitForSelector: Timeout 6250ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('.row-container') to be visible\u001b[22m\n",
+      "memoryUsage": {
+        "rss": 45,
+        "heapTotal": 31,
+        "heapUsed": 27,
+        "external": 4
+      }
+    },
+    {
+      "timestamp": "2025-09-06T23:05:49.070Z",
+      "duration": 18758,
+      "entriesCrawled": 0,
+      "newEntriesAdded": 0,
+      "duplicatesSkipped": 0,
+      "error": "page.waitForSelector: Timeout 6250ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('.row-container') to be visible\u001b[22m\n",
+      "memoryUsage": {
+        "rss": 44,
+        "heapTotal": 31,
+        "heapUsed": 27,
+        "external": 4
+      }
+    },
+    {
+      "timestamp": "2025-09-06T23:05:19.069Z",
+      "duration": 18756,
+      "entriesCrawled": 0,
+      "newEntriesAdded": 0,
+      "duplicatesSkipped": 0,
+      "error": "page.waitForSelector: Timeout 6250ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('.row-container') to be visible\u001b[22m\n",
+      "memoryUsage": {
+        "rss": 45,
+        "heapTotal": 31,
+        "heapUsed": 27,
+        "external": 4
+      }
+    },
+    {
+      "timestamp": "2025-09-06T23:04:49.067Z",
+      "duration": 18753,
+      "entriesCrawled": 0,
+      "newEntriesAdded": 0,
+      "duplicatesSkipped": 0,
+      "error": "page.waitForSelector: Timeout 6250ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('.row-container') to be visible\u001b[22m\n",
+      "memoryUsage": {
+        "rss": 45,
+        "heapTotal": 31,
+        "heapUsed": 27,
+        "external": 4
+      }
+    },
+    {
+      "timestamp": "2025-09-06T23:04:19.066Z",
+      "duration": 18762,
+      "entriesCrawled": 0,
+      "newEntriesAdded": 0,
+      "duplicatesSkipped": 0,
+      "error": "page.waitForSelector: Timeout 6250ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('.row-container') to be visible\u001b[22m\n",
+      "memoryUsage": {
+        "rss": 45,
+        "heapTotal": 31,
+        "heapUsed": 27,
+        "external": 4
+      }
+    },
+    {
+      "timestamp": "2025-09-06T23:03:49.062Z",
+      "duration": 18753,
+      "entriesCrawled": 0,
+      "newEntriesAdded": 0,
+      "duplicatesSkipped": 0,
+      "error": "page.waitForSelector: Timeout 6250ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('.row-container') to be visible\u001b[22m\n",
+      "memoryUsage": {
+        "rss": 46,
+        "heapTotal": 31,
+        "heapUsed": 27,
+        "external": 4
+      }
+    },
+    {
+      "timestamp": "2025-09-06T23:03:19.061Z",
+      "duration": 18753,
+      "entriesCrawled": 0,
+      "newEntriesAdded": 0,
+      "duplicatesSkipped": 0,
+      "error": "page.waitForSelector: Timeout 6250ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('.row-container') to be visible\u001b[22m\n",
+      "memoryUsage": {
+        "rss": 45,
+        "heapTotal": 31,
+        "heapUsed": 26,
+        "external": 4
+      }
+    },
+    {
+      "timestamp": "2025-09-06T23:02:49.059Z",
+      "duration": 18755,
+      "entriesCrawled": 0,
+      "newEntriesAdded": 0,
+      "duplicatesSkipped": 0,
+      "error": "page.waitForSelector: Timeout 6250ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('.row-container') to be visible\u001b[22m\n",
+      "memoryUsage": {
+        "rss": 45,
+        "heapTotal": 31,
+        "heapUsed": 26,
+        "external": 3
+      }
+    },
+    {
+      "timestamp": "2025-09-06T23:02:19.058Z",
+      "duration": 18756,
+      "entriesCrawled": 0,
+      "newEntriesAdded": 0,
+      "duplicatesSkipped": 0,
+      "error": "page.waitForSelector: Timeout 6250ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('.row-container') to be visible\u001b[22m\n",
+      "memoryUsage": {
+        "rss": 45,
+        "heapTotal": 31,
+        "heapUsed": 26,
+        "external": 3
+      }
+    },
+    {
+      "timestamp": "2025-09-06T23:01:49.056Z",
+      "duration": 18755,
+      "entriesCrawled": 0,
+      "newEntriesAdded": 0,
+      "duplicatesSkipped": 0,
+      "error": "page.waitForSelector: Timeout 6250ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('.row-container') to be visible\u001b[22m\n",
+      "memoryUsage": {
+        "rss": 45,
+        "heapTotal": 31,
+        "heapUsed": 26,
+        "external": 3
+      }
+    },
+    {
+      "timestamp": "2025-09-06T23:01:19.055Z",
+      "duration": 18751,
+      "entriesCrawled": 0,
+      "newEntriesAdded": 0,
+      "duplicatesSkipped": 0,
+      "error": "page.waitForSelector: Timeout 6250ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('.row-container') to be visible\u001b[22m\n",
+      "memoryUsage": {
+        "rss": 45,
+        "heapTotal": 31,
+        "heapUsed": 26,
+        "external": 3
+      }
+    },
+    {
+      "timestamp": "2025-09-06T23:00:49.054Z",
+      "duration": 18753,
+      "entriesCrawled": 0,
+      "newEntriesAdded": 0,
+      "duplicatesSkipped": 0,
+      "error": "page.waitForSelector: Timeout 6250ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('.row-container') to be visible\u001b[22m\n",
+      "memoryUsage": {
+        "rss": 45,
+        "heapTotal": 31,
+        "heapUsed": 26,
+        "external": 3
+      }
+    },
+    {
+      "timestamp": "2025-09-06T23:00:19.051Z",
+      "duration": 18756,
+      "entriesCrawled": 0,
+      "newEntriesAdded": 0,
+      "duplicatesSkipped": 0,
+      "error": "page.waitForSelector: Timeout 6250ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('.row-container') to be visible\u001b[22m\n",
+      "memoryUsage": {
+        "rss": 44,
+        "heapTotal": 31,
+        "heapUsed": 26,
+        "external": 3
+      }
+    },
+    {
+      "timestamp": "2025-09-06T22:59:49.050Z",
+      "duration": 18755,
+      "entriesCrawled": 0,
+      "newEntriesAdded": 0,
+      "duplicatesSkipped": 0,
+      "error": "page.waitForSelector: Timeout 6250ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('.row-container') to be visible\u001b[22m\n",
+      "memoryUsage": {
+        "rss": 44,
+        "heapTotal": 31,
+        "heapUsed": 26,
+        "external": 3
+      }
+    },
+    {
+      "timestamp": "2025-09-06T22:59:19.049Z",
+      "duration": 18760,
+      "entriesCrawled": 0,
+      "newEntriesAdded": 0,
+      "duplicatesSkipped": 0,
+      "error": "page.waitForSelector: Timeout 6250ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('.row-container') to be visible\u001b[22m\n",
+      "memoryUsage": {
+        "rss": 44,
+        "heapTotal": 31,
+        "heapUsed": 26,
+        "external": 3
+      }
+    },
+    {
+      "timestamp": "2025-09-06T22:58:49.049Z",
+      "duration": 18757,
+      "entriesCrawled": 0,
+      "newEntriesAdded": 0,
+      "duplicatesSkipped": 0,
+      "error": "page.waitForSelector: Timeout 6250ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('.row-container') to be visible\u001b[22m\n",
+      "memoryUsage": {
+        "rss": 44,
+        "heapTotal": 31,
+        "heapUsed": 26,
+        "external": 3
+      }
+    },
+    {
+      "timestamp": "2025-09-06T22:58:19.048Z",
+      "duration": 18758,
+      "entriesCrawled": 0,
+      "newEntriesAdded": 0,
+      "duplicatesSkipped": 0,
+      "error": "page.waitForSelector: Timeout 6250ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('.row-container') to be visible\u001b[22m\n",
+      "memoryUsage": {
+        "rss": 44,
+        "heapTotal": 31,
+        "heapUsed": 26,
+        "external": 3
+      }
+    },
+    {
+      "timestamp": "2025-09-06T22:57:49.047Z",
+      "duration": 18753,
+      "entriesCrawled": 0,
+      "newEntriesAdded": 0,
+      "duplicatesSkipped": 0,
+      "error": "page.waitForSelector: Timeout 6250ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('.row-container') to be visible\u001b[22m\n",
+      "memoryUsage": {
+        "rss": 44,
+        "heapTotal": 31,
+        "heapUsed": 25,
+        "external": 3
+      }
+    },
+    {
+      "timestamp": "2025-09-06T22:57:19.045Z",
+      "duration": 18755,
+      "entriesCrawled": 0,
+      "newEntriesAdded": 0,
+      "duplicatesSkipped": 0,
+      "error": "page.waitForSelector: Timeout 6250ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('.row-container') to be visible\u001b[22m\n",
+      "memoryUsage": {
+        "rss": 44,
+        "heapTotal": 31,
+        "heapUsed": 25,
+        "external": 3
+      }
+    },
+    {
+      "timestamp": "2025-09-06T22:56:49.044Z",
+      "duration": 18753,
+      "entriesCrawled": 0,
+      "newEntriesAdded": 0,
+      "duplicatesSkipped": 0,
+      "error": "page.waitForSelector: Timeout 6250ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('.row-container') to be visible\u001b[22m\n",
+      "memoryUsage": {
+        "rss": 44,
+        "heapTotal": 31,
+        "heapUsed": 25,
+        "external": 3
+      }
+    },
+    {
+      "timestamp": "2025-09-06T22:56:19.043Z",
+      "duration": 18754,
+      "entriesCrawled": 0,
+      "newEntriesAdded": 0,
+      "duplicatesSkipped": 0,
+      "error": "page.waitForSelector: Timeout 6250ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('.row-container') to be visible\u001b[22m\n",
+      "memoryUsage": {
+        "rss": 44,
+        "heapTotal": 31,
+        "heapUsed": 25,
+        "external": 3
+      }
+    },
+    {
+      "timestamp": "2025-09-06T22:55:49.041Z",
+      "duration": 18755,
+      "entriesCrawled": 0,
+      "newEntriesAdded": 0,
+      "duplicatesSkipped": 0,
+      "error": "page.waitForSelector: Timeout 6250ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('.row-container') to be visible\u001b[22m\n",
+      "memoryUsage": {
+        "rss": 43,
+        "heapTotal": 31,
+        "heapUsed": 25,
+        "external": 3
+      }
+    },
+    {
+      "timestamp": "2025-09-06T22:55:19.039Z",
+      "duration": 18756,
+      "entriesCrawled": 0,
+      "newEntriesAdded": 0,
+      "duplicatesSkipped": 0,
+      "error": "page.waitForSelector: Timeout 6250ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('.row-container') to be visible\u001b[22m\n",
+      "memoryUsage": {
+        "rss": 42,
+        "heapTotal": 31,
+        "heapUsed": 25,
+        "external": 3
+      }
+    },
+    {
+      "timestamp": "2025-09-06T22:54:49.037Z",
+      "duration": 18779,
+      "entriesCrawled": 0,
+      "newEntriesAdded": 0,
+      "duplicatesSkipped": 0,
+      "error": "page.waitForSelector: Timeout 6250ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('.row-container') to be visible\u001b[22m\n",
+      "memoryUsage": {
+        "rss": 41,
+        "heapTotal": 31,
+        "heapUsed": 25,
+        "external": 3
+      }
+    },
+    {
+      "timestamp": "2025-09-06T22:54:19.037Z",
+      "duration": 18756,
+      "entriesCrawled": 0,
+      "newEntriesAdded": 0,
+      "duplicatesSkipped": 0,
+      "error": "page.waitForSelector: Timeout 6250ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('.row-container') to be visible\u001b[22m\n",
+      "memoryUsage": {
+        "rss": 41,
+        "heapTotal": 31,
+        "heapUsed": 25,
+        "external": 3
+      }
+    },
+    {
+      "timestamp": "2025-09-06T22:53:49.036Z",
+      "duration": 18754,
+      "entriesCrawled": 0,
+      "newEntriesAdded": 0,
+      "duplicatesSkipped": 0,
+      "error": "page.waitForSelector: Timeout 6250ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('.row-container') to be visible\u001b[22m\n",
+      "memoryUsage": {
+        "rss": 41,
+        "heapTotal": 31,
+        "heapUsed": 25,
+        "external": 3
+      }
+    },
+    {
+      "timestamp": "2025-09-06T22:53:19.035Z",
+      "duration": 18760,
+      "entriesCrawled": 0,
+      "newEntriesAdded": 0,
+      "duplicatesSkipped": 0,
+      "error": "page.waitForSelector: Timeout 6250ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('.row-container') to be visible\u001b[22m\n",
+      "memoryUsage": {
+        "rss": 39,
+        "heapTotal": 31,
+        "heapUsed": 25,
+        "external": 3
+      }
+    },
+    {
+      "timestamp": "2025-09-06T22:52:49.033Z",
+      "duration": 18762,
+      "entriesCrawled": 0,
+      "newEntriesAdded": 0,
+      "duplicatesSkipped": 0,
+      "error": "page.waitForSelector: Timeout 6250ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('.row-container') to be visible\u001b[22m\n",
+      "memoryUsage": {
+        "rss": 38,
+        "heapTotal": 31,
+        "heapUsed": 25,
+        "external": 3
+      }
+    },
+    {
+      "timestamp": "2025-09-06T22:52:19.031Z",
+      "duration": 19106,
+      "entriesCrawled": 0,
+      "newEntriesAdded": 0,
+      "duplicatesSkipped": 0,
+      "error": "page.waitForSelector: Timeout 6250ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('.row-container') to be visible\u001b[22m\n",
+      "memoryUsage": {
+        "rss": 52,
+        "heapTotal": 31,
+        "heapUsed": 25,
+        "external": 3
+      }
+    },
+    {
+      "timestamp": "2025-09-06T22:49:09.010Z",
+      "duration": 196414,
+      "entriesCrawled": 0,
+      "newEntriesAdded": 0,
+      "duplicatesSkipped": 0,
+      "error": "page.waitForSelector: Timeout 6250ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('.row-container') to be visible\u001b[22m\n",
+      "memoryUsage": {
+        "rss": 52,
+        "heapTotal": 31,
+        "heapUsed": 25,
+        "external": 3
+      }
+    },
+    {
+      "timestamp": "2025-09-06T22:33:45.998Z",
+      "duration": 1113172,
+      "entriesCrawled": 0,
+      "newEntriesAdded": 0,
+      "duplicatesSkipped": 0,
+      "error": "page.waitForSelector: Timeout 6250ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('.row-container') to be visible\u001b[22m\n",
+      "memoryUsage": {
+        "rss": 51,
+        "heapTotal": 31,
+        "heapUsed": 24,
+        "external": 3
+      }
+    },
+    {
+      "timestamp": "2025-09-06T22:23:02.231Z",
+      "duration": 650148,
+      "entriesCrawled": 0,
+      "newEntriesAdded": 0,
+      "duplicatesSkipped": 0,
+      "error": "page.waitForSelector: Timeout 6250ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('.row-container') to be visible\u001b[22m\n",
+      "memoryUsage": {
+        "rss": 51,
+        "heapTotal": 31,
+        "heapUsed": 24,
+        "external": 3
+      }
+    },
+    {
+      "timestamp": "2025-09-06T22:08:36.967Z",
+      "duration": 865397,
+      "entriesCrawled": 0,
+      "newEntriesAdded": 0,
+      "duplicatesSkipped": 0,
+      "error": "page.waitForSelector: Timeout 6250ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('.row-container') to be visible\u001b[22m\n",
+      "memoryUsage": {
+        "rss": 51,
+        "heapTotal": 31,
+        "heapUsed": 25,
+        "external": 3
+      }
+    },
+    {
+      "timestamp": "2025-09-06T21:52:22.945Z",
+      "duration": 982198,
+      "entriesCrawled": 0,
+      "newEntriesAdded": 0,
+      "duplicatesSkipped": 0,
+      "error": "page.waitForSelector: Timeout 6250ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('.row-container') to be visible\u001b[22m\n",
+      "memoryUsage": {
+        "rss": 51,
+        "heapTotal": 31,
+        "heapUsed": 25,
+        "external": 3
+      }
+    },
+    {
+      "timestamp": "2025-09-06T21:37:03.945Z",
+      "duration": 1893153,
+      "entriesCrawled": 0,
+      "newEntriesAdded": 0,
+      "duplicatesSkipped": 0,
+      "error": "page.waitForSelector: Timeout 6250ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('.row-container') to be visible\u001b[22m\n",
+      "memoryUsage": {
+        "rss": 51,
+        "heapTotal": 31,
+        "heapUsed": 25,
+        "external": 3
+      }
+    },
+    {
+      "timestamp": "2025-09-06T21:20:18.935Z",
+      "duration": 1924142,
+      "entriesCrawled": 0,
+      "newEntriesAdded": 0,
+      "duplicatesSkipped": 0,
+      "error": "page.waitForSelector: Timeout 6250ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('.row-container') to be visible\u001b[22m\n",
+      "memoryUsage": {
+        "rss": 51,
+        "heapTotal": 31,
+        "heapUsed": 24,
+        "external": 3
+      }
+    },
+    {
+      "timestamp": "2025-09-06T21:03:21.062Z",
+      "duration": 2023017,
+      "entriesCrawled": 0,
+      "newEntriesAdded": 0,
+      "duplicatesSkipped": 0,
+      "error": "page.waitForSelector: Timeout 6250ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('.row-container') to be visible\u001b[22m\n",
+      "memoryUsage": {
+        "rss": 49,
+        "heapTotal": 31,
+        "heapUsed": 24,
+        "external": 3
+      }
+    },
+    {
+      "timestamp": "2025-09-06T20:55:32.997Z",
+      "duration": 9321,
+      "entriesCrawled": 0,
+      "newEntriesAdded": 0,
+      "duplicatesSkipped": 0,
+      "error": "page.waitForSelector: Target page, context or browser has been closed",
+      "memoryUsage": {
+        "rss": 44,
+        "heapTotal": 31,
+        "heapUsed": 24,
+        "external": 3
+      }
+    },
+    {
+      "timestamp": "2025-09-06T20:55:02.996Z",
+      "duration": 18759,
+      "entriesCrawled": 0,
+      "newEntriesAdded": 0,
+      "duplicatesSkipped": 0,
+      "error": "page.waitForSelector: Timeout 6250ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('.row-container') to be visible\u001b[22m\n",
+      "memoryUsage": {
+        "rss": 44,
+        "heapTotal": 31,
+        "heapUsed": 24,
+        "external": 3
+      }
+    },
+    {
+      "timestamp": "2025-09-06T20:54:32.996Z",
+      "duration": 18762,
+      "entriesCrawled": 0,
+      "newEntriesAdded": 0,
+      "duplicatesSkipped": 0,
+      "error": "page.waitForSelector: Timeout 6250ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('.row-container') to be visible\u001b[22m\n",
+      "memoryUsage": {
+        "rss": 44,
+        "heapTotal": 31,
+        "heapUsed": 24,
+        "external": 3
+      }
+    },
+    {
+      "timestamp": "2025-09-06T20:54:02.995Z",
+      "duration": 18756,
+      "entriesCrawled": 0,
+      "newEntriesAdded": 0,
+      "duplicatesSkipped": 0,
+      "error": "page.waitForSelector: Timeout 6250ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('.row-container') to be visible\u001b[22m\n",
+      "memoryUsage": {
+        "rss": 43,
+        "heapTotal": 31,
+        "heapUsed": 24,
+        "external": 3
+      }
+    },
+    {
+      "timestamp": "2025-09-06T20:53:32.994Z",
+      "duration": 18761,
+      "entriesCrawled": 0,
+      "newEntriesAdded": 0,
+      "duplicatesSkipped": 0,
+      "error": "page.waitForSelector: Timeout 6250ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('.row-container') to be visible\u001b[22m\n",
+      "memoryUsage": {
+        "rss": 43,
+        "heapTotal": 31,
+        "heapUsed": 23,
+        "external": 3
+      }
+    },
+    {
+      "timestamp": "2025-09-06T20:53:02.992Z",
+      "duration": 18755,
+      "entriesCrawled": 0,
+      "newEntriesAdded": 0,
+      "duplicatesSkipped": 0,
+      "error": "page.waitForSelector: Timeout 6250ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('.row-container') to be visible\u001b[22m\n",
+      "memoryUsage": {
+        "rss": 43,
+        "heapTotal": 31,
+        "heapUsed": 24,
+        "external": 3
+      }
+    },
+    {
+      "timestamp": "2025-09-06T20:52:32.990Z",
+      "duration": 18756,
+      "entriesCrawled": 0,
+      "newEntriesAdded": 0,
+      "duplicatesSkipped": 0,
+      "error": "page.waitForSelector: Timeout 6250ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('.row-container') to be visible\u001b[22m\n",
+      "memoryUsage": {
+        "rss": 42,
+        "heapTotal": 31,
+        "heapUsed": 24,
+        "external": 3
+      }
+    },
+    {
+      "timestamp": "2025-09-06T20:52:02.990Z",
+      "duration": 18755,
+      "entriesCrawled": 0,
+      "newEntriesAdded": 0,
+      "duplicatesSkipped": 0,
+      "error": "page.waitForSelector: Timeout 6250ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('.row-container') to be visible\u001b[22m\n",
+      "memoryUsage": {
+        "rss": 42,
+        "heapTotal": 31,
+        "heapUsed": 23,
+        "external": 3
+      }
+    },
+    {
+      "timestamp": "2025-09-06T20:51:32.987Z",
+      "duration": 18760,
+      "entriesCrawled": 0,
+      "newEntriesAdded": 0,
+      "duplicatesSkipped": 0,
+      "error": "page.waitForSelector: Timeout 6250ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('.row-container') to be visible\u001b[22m\n",
+      "memoryUsage": {
+        "rss": 42,
+        "heapTotal": 31,
+        "heapUsed": 23,
+        "external": 3
+      }
+    },
+    {
+      "timestamp": "2025-09-06T20:51:02.986Z",
+      "duration": 18761,
+      "entriesCrawled": 0,
+      "newEntriesAdded": 0,
+      "duplicatesSkipped": 0,
+      "error": "page.waitForSelector: Timeout 6250ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('.row-container') to be visible\u001b[22m\n",
+      "memoryUsage": {
+        "rss": 41,
+        "heapTotal": 31,
+        "heapUsed": 23,
+        "external": 3
+      }
+    },
+    {
+      "timestamp": "2025-09-06T20:50:32.984Z",
+      "duration": 18755,
+      "entriesCrawled": 0,
+      "newEntriesAdded": 0,
+      "duplicatesSkipped": 0,
+      "error": "page.waitForSelector: Timeout 6250ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('.row-container') to be visible\u001b[22m\n",
+      "memoryUsage": {
+        "rss": 40,
+        "heapTotal": 31,
+        "heapUsed": 23,
+        "external": 3
+      }
+    },
+    {
+      "timestamp": "2025-09-06T20:50:02.983Z",
+      "duration": 18756,
+      "entriesCrawled": 0,
+      "newEntriesAdded": 0,
+      "duplicatesSkipped": 0,
+      "error": "page.waitForSelector: Timeout 6250ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('.row-container') to be visible\u001b[22m\n",
+      "memoryUsage": {
+        "rss": 40,
+        "heapTotal": 31,
+        "heapUsed": 23,
+        "external": 3
+      }
+    },
+    {
+      "timestamp": "2025-09-06T20:49:32.982Z",
+      "duration": 18893,
+      "entriesCrawled": 0,
+      "newEntriesAdded": 0,
+      "duplicatesSkipped": 0,
+      "error": "page.waitForSelector: Timeout 6250ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('.row-container') to be visible\u001b[22m\n",
+      "memoryUsage": {
+        "rss": 65,
+        "heapTotal": 31,
+        "heapUsed": 23,
+        "external": 3
+      }
+    },
+    {
+      "timestamp": "2025-09-06T20:39:35.868Z",
+      "duration": 603505,
+      "entriesCrawled": 0,
+      "newEntriesAdded": 0,
+      "duplicatesSkipped": 0,
+      "error": "page.waitForSelector: Timeout 6250ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('.row-container') to be visible\u001b[22m\n",
+      "memoryUsage": {
+        "rss": 65,
+        "heapTotal": 31,
+        "heapUsed": 23,
+        "external": 3
+      }
+    },
+    {
+      "timestamp": "2025-09-06T20:22:23.870Z",
+      "duration": 1629251,
+      "entriesCrawled": 0,
+      "newEntriesAdded": 0,
+      "duplicatesSkipped": 0,
+      "error": "page.waitForSelector: Timeout 6250ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('.row-container') to be visible\u001b[22m\n",
+      "memoryUsage": {
+        "rss": 65,
+        "heapTotal": 31,
+        "heapUsed": 23,
+        "external": 3
+      }
+    },
+    {
+      "timestamp": "2025-09-06T20:06:59.880Z",
+      "duration": 1956126,
+      "entriesCrawled": 0,
+      "newEntriesAdded": 0,
+      "duplicatesSkipped": 0,
+      "error": "page.waitForSelector: Timeout 6250ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('.row-container') to be visible\u001b[22m\n",
+      "memoryUsage": {
+        "rss": 65,
+        "heapTotal": 31,
+        "heapUsed": 22,
+        "external": 3
+      }
+    },
+    {
+      "timestamp": "2025-09-06T19:53:33.886Z",
+      "duration": 812373,
+      "entriesCrawled": 0,
+      "newEntriesAdded": 0,
+      "duplicatesSkipped": 0,
+      "error": "page.waitForSelector: Timeout 6250ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('.row-container') to be visible\u001b[22m\n",
+      "memoryUsage": {
+        "rss": 65,
+        "heapTotal": 31,
+        "heapUsed": 23,
+        "external": 3
+      }
+    },
+    {
+      "timestamp": "2025-09-06T19:36:49.881Z",
+      "duration": 1810128,
+      "entriesCrawled": 0,
+      "newEntriesAdded": 0,
+      "duplicatesSkipped": 0,
+      "error": "page.waitForSelector: Timeout 6250ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('.row-container') to be visible\u001b[22m\n",
+      "memoryUsage": {
+        "rss": 65,
+        "heapTotal": 31,
+        "heapUsed": 22,
+        "external": 3
+      }
+    },
+    {
+      "timestamp": "2025-09-06T19:21:42.853Z",
+      "duration": 1911167,
+      "entriesCrawled": 0,
+      "newEntriesAdded": 0,
+      "duplicatesSkipped": 0,
+      "error": "page.waitForSelector: Timeout 6250ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('.row-container') to be visible\u001b[22m\n",
+      "memoryUsage": {
+        "rss": 65,
+        "heapTotal": 31,
+        "heapUsed": 22,
+        "external": 3
+      }
+    },
+    {
+      "timestamp": "2025-09-06T19:05:59.847Z",
+      "duration": 1850157,
+      "entriesCrawled": 0,
+      "newEntriesAdded": 0,
+      "duplicatesSkipped": 0,
+      "error": "page.waitForSelector: Timeout 6250ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('.row-container') to be visible\u001b[22m\n",
+      "memoryUsage": {
+        "rss": 65,
+        "heapTotal": 31,
+        "heapUsed": 22,
+        "external": 3
+      }
+    },
+    {
+      "timestamp": "2025-09-06T18:55:35.830Z",
+      "duration": 630395,
+      "entriesCrawled": 0,
+      "newEntriesAdded": 0,
+      "duplicatesSkipped": 0,
+      "error": "page.waitForSelector: Timeout 6250ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('.row-container') to be visible\u001b[22m\n",
+      "memoryUsage": {
+        "rss": 65,
+        "heapTotal": 31,
+        "heapUsed": 22,
+        "external": 3
+      }
+    },
+    {
+      "timestamp": "2025-09-06T18:40:11.820Z",
+      "duration": 1548152,
+      "entriesCrawled": 0,
+      "newEntriesAdded": 0,
+      "duplicatesSkipped": 0,
+      "error": "page.waitForSelector: Timeout 6250ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('.row-container') to be visible\u001b[22m\n",
+      "memoryUsage": {
+        "rss": 65,
+        "heapTotal": 32,
+        "heapUsed": 22,
+        "external": 3
+      }
+    },
+    {
+      "timestamp": "2025-09-06T18:22:50.795Z",
+      "duration": 1965167,
+      "entriesCrawled": 0,
+      "newEntriesAdded": 0,
+      "duplicatesSkipped": 0,
+      "error": "page.waitForSelector: Timeout 6250ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('.row-container') to be visible\u001b[22m\n",
+      "memoryUsage": {
+        "rss": 65,
+        "heapTotal": 31,
+        "heapUsed": 22,
+        "external": 3
+      }
+    },
+    {
+      "timestamp": "2025-09-06T18:04:59.804Z",
+      "duration": 2112140,
+      "entriesCrawled": 0,
+      "newEntriesAdded": 0,
+      "duplicatesSkipped": 0,
+      "error": "page.waitForSelector: Timeout 6250ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('.row-container') to be visible\u001b[22m\n",
+      "memoryUsage": {
+        "rss": 65,
+        "heapTotal": 31,
+        "heapUsed": 22,
+        "external": 2
+      }
+    },
+    {
+      "timestamp": "2025-09-06T17:54:34.802Z",
+      "duration": 631371,
+      "entriesCrawled": 0,
+      "newEntriesAdded": 0,
+      "duplicatesSkipped": 0,
+      "error": "page.waitForSelector: Timeout 6250ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('.row-container') to be visible\u001b[22m\n",
+      "memoryUsage": {
+        "rss": 64,
+        "heapTotal": 31,
+        "heapUsed": 21,
+        "external": 2
+      }
+    },
+    {
+      "timestamp": "2025-09-06T17:38:20.812Z",
+      "duration": 1599113,
+      "entriesCrawled": 0,
+      "newEntriesAdded": 0,
+      "duplicatesSkipped": 0,
+      "error": "page.waitForSelector: Timeout 6250ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('.row-container') to be visible\u001b[22m\n",
+      "memoryUsage": {
+        "rss": 64,
+        "heapTotal": 31,
+        "heapUsed": 21,
+        "external": 2
+      }
+    },
+    {
+      "timestamp": "2025-09-06T17:20:42.784Z",
+      "duration": 2032140,
+      "entriesCrawled": 0,
+      "newEntriesAdded": 0,
+      "duplicatesSkipped": 0,
+      "error": "page.waitForSelector: Timeout 6250ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('.row-container') to be visible\u001b[22m\n",
+      "memoryUsage": {
+        "rss": 64,
+        "heapTotal": 31,
+        "heapUsed": 29,
+        "external": 3
+      }
+    }
+  ],
+  "performance": {
+    "fastestRun": 23,
+    "slowestRun": 5127663,
+    "averageMemoryUsage": 0
+  }
+}

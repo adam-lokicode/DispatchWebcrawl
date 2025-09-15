@@ -288,7 +288,10 @@ function parseEquipmentLength(lengthText) {
 
 async function connectToExistingBrowser() {
     console.log('🔗 Connecting to existing Chrome browser...');
-console.log('💡 Note: Email addresses in logs use [at] to prevent triggering email clients');
+process.stdout.write('🔗 Connecting to existing Chrome browser...\n');
+console.log('💡 Note: Contact info in logs is obfuscated to prevent triggering apps (emails/FaceTime)');
+process.stdout.write('💡 Note: Contact info in logs is obfuscated to prevent triggering apps (emails/FaceTime)\n');
+console.log('📄 Original contact data is preserved in the CSV file');
     
     try {
         // Connect to existing browser
@@ -382,6 +385,7 @@ console.log('💡 Note: Email addresses in logs use [at] to prevent triggering e
         }
         
         const extractedData = [];
+        const startTime = Date.now();
         
         // Add some randomness to processing order (sometimes skip around)
         const indices = Array.from({length: loadRows.length}, (_, i) => i);
@@ -398,7 +402,27 @@ console.log('💡 Note: Email addresses in logs use [at] to prevent triggering e
             const i = indices[idx];
             
             try {
-                console.log(`\n🔍 Processing load ${idx + 1}/${loadRows.length}...`);
+                // Calculate and display progress with time estimates
+                const progress = ((idx + 1) / indices.length * 100).toFixed(1);
+                const progressBars = Math.floor(progress / 2);
+                const emptyBars = 50 - progressBars;
+                const progressBar = '█'.repeat(progressBars) + '░'.repeat(emptyBars);
+                
+                // Calculate time estimates
+                const elapsed = (Date.now() - startTime) / 1000;
+                const avgTimePerLoad = elapsed / (idx + 1);
+                const remainingLoads = indices.length - (idx + 1);
+                const estimatedTimeRemaining = Math.round(avgTimePerLoad * remainingLoads);
+                const etaMinutes = Math.floor(estimatedTimeRemaining / 60);
+                const etaSeconds = estimatedTimeRemaining % 60;
+                const etaString = etaMinutes > 0 ? `${etaMinutes}m ${etaSeconds}s` : `${etaSeconds}s`;
+                
+                console.log(`\n===============================================`);
+                console.log(`🔍 PROCESSING LOAD ${idx + 1} OF ${indices.length} (${progress}%)`);
+                console.log(`===============================================`);
+                console.log(`📊 PROGRESS: [${progressBar}] ${progress}%`);
+                console.log(`⏱️  ETA: ${etaString} remaining | Average: ${avgTimePerLoad.toFixed(1)}s per load`);
+                console.log(`===============================================`);
                 
                 // Occasional human-like pauses (like reading other loads)
                 if (Math.random() < 0.15) { // 15% chance
@@ -421,6 +445,7 @@ console.log('💡 Note: Email addresses in logs use [at] to prevent triggering e
                 const row = currentRows[i];
                 
                 // Human-like hover before clicking
+                console.log('>>> 🖱️  HOVERING OVER LOAD...');
                 await row.hover();
                 await page.waitForTimeout(getRandomDelay(200, 600));
                 
@@ -430,6 +455,9 @@ console.log('💡 Note: Email addresses in logs use [at] to prevent triggering e
                     const rateElement = el.querySelector('[data-test="load-rate-cell"]');
                     const originElement = el.querySelector('[data-test="load-origin-cell"]');
                     const destinationElement = el.querySelector('[data-test="load-destination-cell"]');
+                    
+                    // Look for reference number/load ID - will be found in expanded modal
+                    let referenceNumber = 'N/A';
                     
                     // Look for company information within this specific row
                     const companyCell = el.querySelector('.cell-company');
@@ -494,7 +522,8 @@ console.log('💡 Note: Email addresses in logs use [at] to prevent triggering e
                         equipmentType,
                         weight,
                         length,
-                        loadType
+                        loadType,
+                        referenceNumber: referenceNumber
                     };
                 });
                 
@@ -506,10 +535,16 @@ console.log('💡 Note: Email addresses in logs use [at] to prevent triggering e
                 const cleanedContact = normalizeValue(basicInfo.contactInfo);
                 
                 console.log(`📍 ${cleanedOriginDest.origin} → ${cleanedOriginDest.destination} (${normalizeValue(basicInfo.company)})`);
-                // Log contact info safely (avoid triggering email clients)
-                const safeContact = cleanedContact && cleanedContact.includes('@') 
-                    ? cleanedContact.replace('@', ' [at] ') 
-                    : cleanedContact;
+                // Log contact info safely (avoid triggering email/phone clients)
+                let safeContact = cleanedContact;
+                if (safeContact) {
+                    // Replace @ to prevent email clients
+                    safeContact = safeContact.replace('@', ' [at] ');
+                    // Replace phone patterns to prevent FaceTime
+                    safeContact = safeContact.replace(/(\(?\d{3}\)?[-.\s]?\d{3}[-.\s]?\d{4})/g, (match) => {
+                        return match.replace(/[()-.\s]/g, 'X');
+                    });
+                }
                 console.log(`📞 Contact: ${safeContact}`);
                 if (cleanedRate.totalRate || cleanedRate.ratePerMile) {
                     console.log(`💰 Rate: ${cleanedRate.totalRate || 'N/A'} | Per Mile: ${cleanedRate.ratePerMile || 'N/A'}`);
@@ -520,12 +555,15 @@ console.log('💡 Note: Email addresses in logs use [at] to prevent triggering e
                 await page.waitForTimeout(getReadingDelay(textLength));
                 
                 // Click on the row to get additional details if needed
+                console.log('>>> 👆 CLICKING TO REVEAL DETAILS...');
                 await row.click();
                 
                 // Human-like wait time for details to load
+                console.log('>>> ⏳ WAITING FOR DETAILS TO LOAD...');
                 await page.waitForTimeout(getRandomDelay(1500, 3000));
                 
                 // Extract additional detailed information from the opened modal/panel
+                console.log('>>> 📋 EXTRACTING DETAILED INFORMATION...');
                 const detailedInfo = await page.evaluate(() => {
                     // Extract other detailed info from modal
                     const pickupDate = document.querySelector('[data-test*="pickup"], .pickup-date, .pickup')?.textContent?.trim() || 'N/A';
@@ -533,11 +571,54 @@ console.log('💡 Note: Email addresses in logs use [at] to prevent triggering e
                     const loadRequirements = document.querySelector('.requirements, .load-requirements, [class*="requirement"]')?.textContent?.trim() || 'N/A';
                     const tripDistance = document.querySelector('[data-test*="distance"], .distance, .miles')?.textContent?.trim() || 'N/A';
                     
+                    // Look for Reference ID in the expanded modal
+                    let referenceNumber = 'N/A';
+                    
+                    // First try to find it by DOM element structure
+                    const refElements = document.querySelectorAll('*');
+                    for (const element of refElements) {
+                        const text = element.textContent;
+                        if (text && text.includes('Reference ID')) {
+                            // Look for the specific DAT ONE pattern near "Reference ID"
+                            const parentText = element.parentElement ? element.parentElement.textContent : text;
+                            const idMatch = parentText.match(/Reference\s*ID\s*([0-9]{2}[A-Z][0-9]{4})/i);
+                            if (idMatch) {
+                                referenceNumber = idMatch[1];
+                                break;
+                            }
+                        }
+                    }
+                    
+                    // If not found by DOM, search the full text more carefully
+                    if (referenceNumber === 'N/A') {
+                        const allText = document.body.textContent;
+                        
+                        // Look specifically for "Reference ID" followed by the DAT pattern
+                        const precisePattern = /Reference\s*ID\s*([0-9]{2}[A-Z][0-9]{4})/i;
+                        const match = allText.match(precisePattern);
+                        if (match) {
+                            referenceNumber = match[1];
+                        } else {
+                            // Fallback: look for the DAT pattern anywhere, but only if it's near "Reference"
+                            const lines = allText.split('\n');
+                            for (const line of lines) {
+                                if (line.includes('Reference') && line.match(/[0-9]{2}[A-Z][0-9]{4}/)) {
+                                    const idMatch = line.match(/([0-9]{2}[A-Z][0-9]{4})/);
+                                    if (idMatch) {
+                                        referenceNumber = idMatch[1];
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    
                     return {
                         pickupDate,
                         deliveryDate,
                         loadRequirements,
-                        tripDistance
+                        tripDistance,
+                        referenceNumber
                     };
                 });
                 
@@ -583,6 +664,7 @@ console.log('💡 Note: Email addresses in logs use [at] to prevent triggering e
                 
                 // Create data in the specified format
                 const loadData = {
+                    reference_number: normalizeValue(detailedInfo.referenceNumber),
                     origin: cleanedOriginDest.origin,
                     destination: cleanedOriginDest.destination,
                     rate_total_usd: rateTotal,
@@ -652,12 +734,13 @@ console.log('💡 Note: Email addresses in logs use [at] to prevent triggering e
                 fs.mkdirSync(outputDir, { recursive: true });
             }
             
-            const csvFilename = `dat_one_loads_cleaned_${new Date().toISOString().slice(0, 19).replace(/:/g, '-')}.csv`;
+            const csvFilename = `dat_one_loads_latest.csv`;
             const csvPath = path.join(outputDir, csvFilename);
             
             const csvWriter = createCsvWriter({
                 path: csvPath,
                 header: [
+                    { id: 'reference_number', title: 'reference_number' },
                     { id: 'origin', title: 'origin' },
                     { id: 'destination', title: 'destination' },
                     { id: 'rate_total_usd', title: 'rate_total_usd' },
@@ -690,7 +773,11 @@ console.log('💡 Note: Email addresses in logs use [at] to prevent triggering e
             
             if (phoneNumbers.length > 0) {
                 console.log(`📞 Phone numbers (${phoneNumbers.length}):`);
-                phoneNumbers.forEach(phone => console.log(`   ${phone}`));
+                phoneNumbers.forEach(phone => {
+                    // Replace phone patterns to prevent FaceTime
+                    const safePhone = phone.replace(/[()-.\s]/g, 'X');
+                    console.log(`   ${safePhone}`);
+                });
             }
             
             if (emails.length > 0) {

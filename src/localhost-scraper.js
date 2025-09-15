@@ -11,8 +11,8 @@ const CONFIG = {
     intervalSeconds: 30,
     maxEntries: 25,
     outputFile: 'dat_one_loads_localhost.csv',
-    headless: false, // Always visible for localhost
-    timeout: 30000, // Faster timeout
+    headless: true, // Run headless for efficiency
+    timeout: 10000, // Very fast timeout for testing
     maxRetries: 3,
     healthCheckPort: 8080,
     
@@ -93,7 +93,7 @@ class LocalhostScraper {
                 this.log('info', '✅ Loaded DAT One login page directly');
                 
                 // Wait for page to fully render (faster)
-                await this.page.waitForTimeout(1000);
+                await this.page.waitForTimeout(300);
                 
                 // Take initial screenshot
                 await this.page.screenshot({ path: './output/initial-login-page.png', fullPage: true });
@@ -462,7 +462,7 @@ class LocalhostScraper {
                     if (element) {
                         this.log('info', `🔐 Found MFA prompt, clicking "Remind Me Later" with selector: ${selector}`);
                         await element.click();
-                        await this.page.waitForTimeout(1000); // Faster wait
+                        await this.page.waitForTimeout(300); // Faster wait
                         this.log('info', '✅ Successfully dismissed MFA prompt');
                         return;
                     }
@@ -532,7 +532,7 @@ class LocalhostScraper {
                         if (element) {
                             this.log('info', `📧 Found email option, clicking: ${selector}`);
                             await element.click();
-                            await this.page.waitForTimeout(1000);
+                            await this.page.waitForTimeout(300);
                             this.log('info', '✅ Successfully selected email verification method');
                             return true;
                         }
@@ -643,22 +643,58 @@ class LocalhostScraper {
     async handleEmailVerification(gmailUser, gmailPass) {
         this.log('info', '📧 Handling email verification');
 
-        // Try Gmail API first (official, secure method)
+        // Force a fresh code by clicking resend FIRST
+        try {
+            this.log('info', '🔄 Forcing fresh verification code by clicking Resend first...');
+            const resendButton = await this.page.waitForSelector('button:has-text("Resend"), a:has-text("Resend")', { timeout: 3000 });
+            if (resendButton) {
+                await resendButton.click();
+                this.log('info', '✅ Clicked Resend - fresh code should arrive shortly');
+                await this.page.waitForTimeout(2000); // Brief wait for email to send
+            }
+        } catch (resendError) {
+            this.log('debug', `Resend button not found, proceeding with existing flow: ${resendError.message}`);
+        }
+
+        // Now try Gmail API for the fresh code
         try {
             this.log('info', '🔑 Attempting Gmail API verification...');
             const gmailAPI = new GmailAPI();
             const authenticated = await gmailAPI.authenticate();
             
             if (authenticated) {
-                this.log('info', '✅ Gmail API authenticated, searching for verification code...');
-                const code = await gmailAPI.waitForVerificationCode(3, 5); // Wait 3 min, check every 5 sec
+                this.log('info', '✅ Gmail API authenticated, searching for FRESH verification code...');
+                const code = await gmailAPI.waitForVerificationCode(1, 2); // Wait 1 min, check every 2 sec (very fresh)
                 
                 if (code) {
                     this.log('info', `✅ Found verification code via Gmail API: ${code}`);
                     await this.enterVerificationCode(code);
                     return;
                 } else {
-                    this.log('warn', '⚠️ Gmail API timeout, falling back to manual entry');
+                    this.log('warn', '⚠️ Gmail API timeout - trying to get fresh code...');
+                    
+                    // Try clicking resend to get a fresh code
+                    try {
+                        this.log('info', '🔄 Clicking Resend to get fresh verification code...');
+                        const resendButton = await this.page.waitForSelector('button:has-text("Resend"), a:has-text("Resend")', { timeout: 3000 });
+                        if (resendButton) {
+                            await resendButton.click();
+                            this.log('info', '✅ Clicked Resend button, waiting for fresh code...');
+                            await this.page.waitForTimeout(3000); // Wait for fresh email
+                            
+                            // Try Gmail API again with fresh code
+                            const freshCode = await gmailAPI.waitForVerificationCode(1, 2); // 1 min, check every 2 sec
+                            if (freshCode) {
+                                this.log('info', `✅ Found fresh verification code: ${freshCode}`);
+                                await this.enterVerificationCode(freshCode);
+                                return;
+                            }
+                        }
+                    } catch (resendError) {
+                        this.log('debug', `Resend not available: ${resendError.message}`);
+                    }
+                    
+                    this.log('warn', '⚠️ Gmail API could not find fresh code, falling back to manual entry');
                 }
             } else {
                 this.log('info', '📋 Gmail API not configured, using manual verification');
@@ -838,7 +874,7 @@ class LocalhostScraper {
                 // Clear any existing value first
                 await codeInput.click();
                 await codeInput.fill('');
-                await this.page.waitForTimeout(500);
+                await this.page.waitForTimeout(200);
                 
                 // Enter the code with typing simulation for better reliability
                 await codeInput.type(code, { delay: 100 });
@@ -876,6 +912,44 @@ class LocalhostScraper {
                     await submitButton.click();
                     this.log('info', '✅ Clicked submit button for verification code');
                     await this.page.waitForTimeout(3000);
+                    
+                    // Check if there's an "invalid code" error
+                    const invalidCodeError = await this.page.$('text="The code you entered is invalid"');
+                    if (invalidCodeError) {
+                        this.log('warn', '⚠️ Invalid code error detected, clicking Resend to get fresh code');
+                        
+                        // Click Resend button
+                        const resendButton = await this.page.$('text="Resend", button:has-text("Resend")');
+                        if (resendButton) {
+                            await resendButton.click();
+                            this.log('info', '✅ Clicked Resend button');
+                            await this.page.waitForTimeout(2000);
+                            
+                            // Wait for new verification code via Gmail API
+                            this.log('info', '⏳ Waiting for fresh verification code...');
+                            const GmailAPI = require('./gmail-api');
+                            const gmailAPI = new GmailAPI();
+                            await gmailAPI.authenticate();
+                            const freshCode = await gmailAPI.waitForVerificationCode(2, 5); // Wait 2 min, check every 5 sec
+                            
+                            if (freshCode) {
+                                this.log('info', `✅ Found fresh verification code: ${freshCode}`);
+                                
+                                // Clear and enter the fresh code
+                                await codeInput.click();
+                                await codeInput.fill('');
+                                await this.page.waitForTimeout(200);
+                                await codeInput.type(freshCode, { delay: 100 });
+                                
+                                // Submit again
+                                await submitButton.click();
+                                this.log('info', '✅ Submitted fresh verification code');
+                                await this.page.waitForTimeout(3000);
+                            } else {
+                                this.log('error', '❌ Could not get fresh verification code');
+                            }
+                        }
+                    }
                 } else {
                     this.log('warn', '⚠️ No submit button found, trying Enter key');
                     await codeInput.press('Enter');
@@ -1054,21 +1128,384 @@ class LocalhostScraper {
         }
     }
 
+    async fillSearchForm() {
+        try {
+            this.log('info', '📝 Filling out search form for load search');
+            
+            // Wait for the search form to be ready - first let's analyze what's on the page
+        this.log('info', '🔍 Analyzing search page structure...');
+        await this.page.waitForTimeout(500);
+            
+            // Take a screenshot for debugging
+            await this.page.screenshot({ path: 'output/search-form-debug.png', fullPage: true });
+            
+            // Check what input fields are available
+            const allInputs = await this.page.$$('input');
+            this.log('info', `Found ${allInputs.length} input elements on search page`);
+            
+            for (let i = 0; i < Math.min(10, allInputs.length); i++) {
+                const input = allInputs[i];
+                const placeholder = await input.getAttribute('placeholder');
+                const type = await input.getAttribute('type');
+                const name = await input.getAttribute('name');
+                const id = await input.getAttribute('id');
+                const className = await input.getAttribute('class');
+                
+                this.log('debug', `Input ${i + 1}: type="${type}" placeholder="${placeholder}" name="${name}" id="${id}" class="${className}"`);
+            }
+            
+            // Try to wait for the Origin field with more flexible selector
+            try {
+                await this.page.waitForSelector('input[placeholder="Origin"], input[placeholder*="Origin"], [aria-label*="Origin"], input', { timeout: 15000 });
+            } catch (error) {
+                this.log('error', '❌ Could not find Origin field, taking screenshot and analyzing page');
+                await this.page.screenshot({ path: 'output/origin-field-not-found.png', fullPage: true });
+                
+                // Get page content for analysis
+                const pageContent = await this.page.content();
+                this.log('debug', `Page content length: ${pageContent.length}`);
+                
+                // Look for Origin-related text
+                const hasOriginText = pageContent.includes('Origin') || pageContent.includes('origin');
+                this.log('info', `Page contains origin text: ${hasOriginText}`);
+                
+                throw error;
+            }
+            
+            // Fill Origin field using the exact data-test attribute
+            this.log('info', '🔍 Looking for Origin field with data-test="origin-input"...');
+            const originField = await this.page.waitForSelector('input[data-test="origin-input"]', { timeout: 10000 });
+            
+            if (originField) {
+                this.log('info', '✅ Found origin field with data-test="origin-input"');
+                await originField.click();
+                await originField.fill(''); // Clear first
+                await originField.fill('Denver, CO');
+                await this.page.waitForTimeout(300);
+                this.log('info', '✅ Filled origin: Denver, CO');
+            } else {
+                throw new Error('Origin field not found with data-test="origin-input"');
+            }
+            
+            // Fill Destination field using the exact data-test attribute
+            this.log('info', '🔍 Looking for Destination field with data-test="destination-input"...');
+            const destinationField = await this.page.waitForSelector('input[data-test="destination-input"]', { timeout: 10000 });
+            
+            if (destinationField) {
+                this.log('info', '✅ Found destination field with data-test="destination-input"');
+                await destinationField.click();
+                await destinationField.fill(''); // Clear first
+                await destinationField.fill('San Francisco, CA');
+                await this.page.waitForTimeout(300);
+                this.log('info', '✅ Filled destination: San Francisco, CA');
+            } else {
+                throw new Error('Destination field not found with data-test="destination-input"');
+            }
+            
+            // Fill Equipment Type - REQUIRED for search to work
+            this.log('info', '🔍 Looking for Equipment Type field (REQUIRED for search)...');
+            try {
+                // Target the specific equipment input we saw in debug output
+                let equipmentField = null;
+                const equipmentSelectors = [
+                    'input[id^="mat-chip-list-input"]',  // Any mat-chip-list-input ID
+                    'label:has-text("Equipment Type*") + * input',  // Input after Equipment Type label
+                    'mat-form-field:has(mat-label:text("Equipment Type*")) input',  // Input within Equipment Type form field
+                    '#mat-chip-list-input-3',  // The specific ID from your HTML
+                    'input[placeholder="Equipment"]',  // Fallback placeholder
+                    'input[id*="chip-list-input"]'  // General chip list input
+                ];
+                
+            
+                for (const selector of equipmentSelectors) {
+                    try {
+                        equipmentField = await this.page.$(selector);
+                        if (equipmentField) {
+                            this.log('info', `✅ Found equipment field with selector: ${selector}`);
+                            break;
+                        }
+                    } catch (e) {
+                        continue;
+                    }
+                }
+                
+                if (equipmentField) {
+                    // Try JavaScript-based interaction for invisible Angular Material elements
+                    this.log('debug', 'Using JavaScript to interact with equipment field...');
+                    
+                    // Use JavaScript to focus and fill the field directly
+                    const jsResult = await this.page.evaluate(() => {
+                        // Try multiple selectors in JavaScript
+                        const selectors = [
+                            'input[id^="mat-chip-list-input"]',
+                            '#mat-chip-list-input-3',
+                            'input[placeholder="Equipment"]',
+                            'input[id*="chip-list-input"]'
+                        ];
+                        
+                        for (const selector of selectors) {
+                            const field = document.querySelector(selector);
+                            if (field) {
+                                // Make sure it's visible and focusable
+                                field.style.visibility = 'visible';
+                                field.style.display = 'block';
+                                field.style.opacity = '1';
+                                
+                                // Focus and trigger events
+                                field.focus();
+                                field.click();
+                                
+                                // Trigger input events
+                                field.dispatchEvent(new Event('focus', { bubbles: true }));
+                                field.dispatchEvent(new Event('click', { bubbles: true }));
+                                
+                                return { success: true, selector: selector };
+                            }
+                        }
+                        return { success: false };
+                    });
+                    
+                    this.log('info', '✅ JavaScript interaction completed');
+                    await this.page.waitForTimeout(500);
+                    
+                    // Type "Reefer" using JavaScript to trigger autocomplete
+                    await this.page.evaluate(() => {
+                        // Find the equipment field dynamically
+                        const selectors = [
+                            'input[id^="mat-chip-list-input"]',
+                            '#mat-chip-list-input-3',
+                            'input[placeholder="Equipment"]'
+                        ];
+                        
+                        for (const selector of selectors) {
+                            const field = document.querySelector(selector);
+                            if (field) {
+                                field.value = 'Reefer';
+                                field.dispatchEvent(new Event('input', { bubbles: true }));
+                                field.dispatchEvent(new Event('change', { bubbles: true }));
+                                field.dispatchEvent(new KeyboardEvent('keydown', { key: 'r', bubbles: true }));
+                                field.dispatchEvent(new KeyboardEvent('keyup', { key: 'r', bubbles: true }));
+                                return true;
+                            }
+                        }
+                        return false;
+                    });
+                    
+                    this.log('info', '✅ Typed "Reefer" using JavaScript');
+                    await this.page.waitForTimeout(200); // Quick wait for dropdown
+                    
+                    // Look for autocomplete options
+                    try {
+                        // Try multiple variations of Reefer options
+                        const reeferOptions = [
+                            'mat-option:has-text("Reefer")',
+                            'mat-option:has-text("Reefers")', 
+                            'mat-option:contains("Reefer")',
+                            '[role="option"]:has-text("Reefer")'
+                        ];
+                        
+                        let optionSelected = false;
+                        for (const optionSelector of reeferOptions) {
+                            try {
+                                const option = await this.page.waitForSelector(optionSelector, { timeout: 1000 });
+                                if (option) {
+                                    await option.click();
+                                    this.log('info', `✅ Selected Reefer option with selector: ${optionSelector}`);
+                                    optionSelected = true;
+                                    break;
+                                }
+                            } catch (e) {
+                                continue;
+                            }
+                        }
+                        
+                        if (!optionSelected) {
+                            // If no dropdown option found, try pressing Enter
+                            await this.page.keyboard.press('Enter');
+                            this.log('info', '✅ Pressed Enter for Reefer selection');
+                        }
+                        
+                    } catch (e) {
+                        // Fallback: press Tab to confirm selection
+                        await this.page.keyboard.press('Tab');
+                        this.log('info', '✅ Pressed Tab to confirm Reefer selection');
+                    }
+                    
+                    // Wait a moment for the selection to register
+                    await this.page.waitForTimeout(500);
+                    
+                } else {
+                    throw new Error('Equipment field not found with any selector - search will fail!');
+                }
+            } catch (e) {
+                this.log('error', `❌ Equipment field handling failed: ${e.message}`);
+                this.log('warn', '⚠️ Continuing anyway to test search button...');
+                // Don't throw - let's see if search works without equipment
+            }
+            
+            // Set date range to next week using the specific date range inputs
+            this.log('info', '🔍 Looking for Date Range fields...');
+            const startDateField = await this.page.$('input[placeholder="Start date"]');
+            const endDateField = await this.page.$('.mat-end-date');
+            
+            let dateField = startDateField || endDateField;
+            
+            if (startDateField && endDateField) {
+                // Calculate next full week's date range (Monday to Sunday)
+                const today = new Date();
+                
+                // Find next Monday
+                const currentDayOfWeek = today.getDay(); // 0 = Sunday, 1 = Monday, etc.
+                const daysUntilNextMonday = currentDayOfWeek === 0 ? 1 : (8 - currentDayOfWeek); // Days until next Monday
+                
+                const nextMonday = new Date(today);
+                nextMonday.setDate(today.getDate() + daysUntilNextMonday);
+                
+                // Next Sunday (6 days after Monday)
+                const nextSunday = new Date(nextMonday);
+                nextSunday.setDate(nextMonday.getDate() + 6);
+                
+                const formatDate = (date) => {
+                    return `${(date.getMonth() + 1)}/${date.getDate()}/${date.getFullYear()}`;
+                };
+                
+                const startDate = formatDate(nextMonday);
+                const endDate = formatDate(nextSunday);
+                
+                this.log('info', `📅 Calculating full week: Monday ${startDate} to Sunday ${endDate}`);
+                
+                // Fill start date
+                this.log('info', '📅 Filling start date field...');
+                await startDateField.click();
+                await startDateField.fill(''); // Clear first
+                await startDateField.fill(startDate);
+                await this.page.waitForTimeout(200);
+                
+                // Fill end date
+                this.log('info', '📅 Filling end date field...');
+                await endDateField.click();
+                await endDateField.fill(''); // Clear first
+                await endDateField.fill(endDate);
+                await this.page.waitForTimeout(200);
+                
+                this.log('info', `✅ Filled date range: ${startDate} to ${endDate}`);
+            } else if (dateField) {
+                // Fallback to single date field
+                this.log('info', '📅 Using single date field as fallback...');
+                const today = new Date();
+                const currentDayOfWeek = today.getDay();
+                const daysUntilNextMonday = currentDayOfWeek === 0 ? 1 : (8 - currentDayOfWeek);
+                
+                const nextMonday = new Date(today);
+                nextMonday.setDate(today.getDate() + daysUntilNextMonday);
+                
+                const nextSunday = new Date(nextMonday);
+                nextSunday.setDate(nextMonday.getDate() + 6);
+                
+                const formatDate = (date) => {
+                    return `${(date.getMonth() + 1)}/${date.getDate()}/${date.getFullYear()}`;
+                };
+                
+                const dateRange = `${formatDate(nextMonday)} - ${formatDate(nextSunday)}`;
+                
+                await dateField.click();
+                await dateField.fill(''); // Clear first
+                await dateField.fill(dateRange);
+                await this.page.waitForTimeout(300);
+                this.log('info', `✅ Filled date range: ${dateRange}`);
+            } else {
+                this.log('warn', '⚠️ No date fields found, skipping date range...');
+            }
+            
+            // Click the SEARCH button
+            const searchSelectors = [
+                'button:has-text("SEARCH")',
+                'button:text("SEARCH")',
+                'button[type="submit"]',
+                'input[type="submit"]',
+                'button[aria-label*="search"]',
+                '.search-button',
+                '#search-button'
+            ];
+            
+            let searchButton = null;
+            for (const selector of searchSelectors) {
+                try {
+                    searchButton = await this.page.$(selector);
+                    if (searchButton) {
+                        this.log('info', `✅ Found search button with selector: ${selector}`);
+                        break;
+                    }
+                } catch (e) {
+                    continue;
+                }
+            }
+            
+            if (searchButton) {
+                this.log('info', '🔍 Attempting to click SEARCH button...');
+                
+                // Try multiple click strategies
+                try {
+                    // Strategy 1: Normal click
+                    await searchButton.click({ timeout: 3000 });
+                    this.log('info', '✅ Clicked SEARCH button normally');
+                } catch (e1) {
+                    try {
+                        // Strategy 2: Force click
+                        await searchButton.click({ force: true, timeout: 3000 });
+                        this.log('info', '✅ Force-clicked SEARCH button');
+                    } catch (e2) {
+                        try {
+                            // Strategy 3: JavaScript click
+                            await searchButton.evaluate(el => el.click());
+                            this.log('info', '✅ JavaScript-clicked SEARCH button');
+                        } catch (e3) {
+                            // Strategy 4: Try pressing Enter on the form
+                            await this.page.keyboard.press('Enter');
+                            this.log('info', '✅ Pressed Enter to submit search');
+                        }
+                    }
+                }
+                
+                // Wait for search results to load
+                await this.page.waitForTimeout(2000);
+                this.log('info', '⏳ Waiting for search results to load...');
+            } else {
+                this.log('error', '❌ Search button not found, trying Enter key...');
+                await this.page.keyboard.press('Enter');
+            }
+            
+        } catch (error) {
+            this.log('error', 'Failed to fill search form', { error: error.message });
+            throw error;
+        }
+    }
+
     async scrapeLoads() {
         try {
             this.log('info', '🔍 Starting load extraction');
             
-            // Try multiple selectors to find load rows
+            // Wait for actual load data to appear (not just loading spinners)
+            this.log('info', '⏳ Waiting for load data to load completely...');
+            await this.page.waitForTimeout(3000); // Wait for loads to load
+        
+        // Take a screenshot to see what's actually on the page
+        await this.page.screenshot({ path: 'output/search-results-debug.png', fullPage: true });
+        this.log('info', '📸 Screenshot saved to output/search-results-debug.png for debugging');
+            
+            // Try multiple selectors to find load rows, excluding headers and loading elements
             const rowSelectors = [
-                '.row-container',
-                '[class*="load-row"]',
+                'tbody tr', // Table rows in results table
+                'tr:has(input[type="checkbox"])', // Rows with checkboxes (load selection)
+                'tr:not(:first-child)', // All rows except header
+                '.row-container:not(.header):not(.loading)',
+                '[class*="load-row"]:not([class*="header"])',
                 '[data-test*="load-row"]',
-                '[class*="load"][class*="row"]',
-                'tr[class*="load"]',
-                'div[class*="load"]:not([class*="board"]):not([class*="search"])',
-                '[role="row"]',
-                'tbody tr',
-                '.table-row'
+                '[class*="load"][class*="row"]:not([class*="header"])',
+                'tr[class*="load"]:not([class*="header"])',
+                'div[class*="load"]:not([class*="board"]):not([class*="search"]):not([class*="header"]):not([class*="loading"])',
+                '[role="row"]:not([class*="header"])',
+                '.table-row:not(.header)'
             ];
             
             let loadRows = [];
@@ -1078,18 +1515,35 @@ class LocalhostScraper {
                 try {
                     this.log('debug', `Testing row selector: ${selector}`);
                     const rows = await this.page.$$(selector);
+                    
                     if (rows && rows.length > 0) {
-                        loadRows = rows;
-                        usedSelector = selector;
-                        this.log('info', `✅ Found ${rows.length} load rows with selector: ${selector}`);
-                        break;
+                        // Filter out header rows and loading elements by checking content
+                        const filteredRows = [];
+                        for (const row of rows) {
+                            const text = await row.textContent();
+                            const isHeaderRow = text.includes('Origin') && text.includes('Destination') && text.includes('Rate');
+                            const isLoadingRow = text.includes('Loading') || text.includes('loading');
+                            const isEmpty = text.trim().length < 10;
+                            
+                            if (!isHeaderRow && !isLoadingRow && !isEmpty) {
+                                filteredRows.push(row);
+                            }
+                        }
+                        
+                        if (filteredRows.length > 0) {
+                            loadRows = filteredRows;
+                            usedSelector = selector;
+                            this.log('info', `✅ Found ${filteredRows.length} actual load rows with selector: ${selector} (filtered from ${rows.length} total)`);
+                            break;
+                        }
                     }
                 } catch (e) {
                     continue;
                 }
             }
             
-            const targetRows = loadRows.slice(0, CONFIG.maxEntries);
+            // For testing modal issues, limit to just 2 loads to avoid confusion
+            const targetRows = loadRows.slice(0, Math.min(2, CONFIG.maxEntries));
             
             this.log('info', `📊 Found ${loadRows.length} loads, processing ${targetRows.length}`);
             
@@ -1107,6 +1561,20 @@ class LocalhostScraper {
                                   pageContent.includes('freight') || pageContent.includes('Freight');
                 this.log('info', `Page contains load-related text: ${hasLoadText}`);
                 
+                // Let's analyze all table-like elements
+                const tableElements = await this.page.$$('table, tbody, tr, [role="table"], [role="row"], div[class*="table"], div[class*="row"]');
+                this.log('info', `Found ${tableElements.length} table-like elements`);
+                
+                // Sample the first few elements to see their structure
+                for (let i = 0; i < Math.min(5, tableElements.length); i++) {
+                    const element = tableElements[i];
+                    const text = await element.textContent();
+                    const tagName = await element.evaluate(el => el.tagName);
+                    const className = await element.evaluate(el => el.className);
+                    
+                    this.log('debug', `Element ${i + 1}: ${tagName}.${className} - "${text.substring(0, 100)}..."`);
+                }
+                
                 throw new Error(`No load rows found with any selector. Used selectors: ${rowSelectors.join(', ')}`);
             }
 
@@ -1117,20 +1585,509 @@ class LocalhostScraper {
                     const row = targetRows[i];
                     this.log('debug', `Processing load ${i + 1}/${targetRows.length}`);
                     
-                    // Extract basic data from row
-                    const loadData = await row.evaluate(el => {
-                        const getTextContent = (selector) => {
-                            const element = el.querySelector(selector);
-                            return element ? element.textContent.trim() : '';
+                    // Extract basic data from row with flexible selectors
+                    const basicLoadData = await row.evaluate(el => {
+                        const getTextContent = (selectors) => {
+                            // Try multiple selectors until one works
+                            for (const selector of selectors) {
+                                const element = el.querySelector(selector);
+                                if (element && element.textContent.trim()) {
+                                    return element.textContent.trim();
+                                }
+                            }
+                            return '';
                         };
 
-                        return {
-                            origin: getTextContent('[data-test="load-origin-cell"]'),
-                            destination: getTextContent('[data-test="load-destination-cell"]'),
-                            rate: getTextContent('[data-test="load-rate-cell"]'),
-                            company: getTextContent('[data-test="load-company-cell"]'),
-                            age: getTextContent('[data-test="load-age-cell"]')
+                        // Get all text content for analysis
+                        const allText = el.textContent.trim();
+                        
+                        // Try to find data using multiple selector strategies
+                        const originSelectors = [
+                            '[data-test="load-origin-cell"]',
+                            '[data-testid*="origin"]',
+                            '[class*="origin"]',
+                            '[aria-label*="origin"]',
+                            'td:first-child',
+                            'div:first-child',
+                            '.cell:first-child'
+                        ];
+                        
+                        const destinationSelectors = [
+                            '[data-test="load-destination-cell"]',
+                            '[data-testid*="destination"]',
+                            '[class*="destination"]',
+                            '[aria-label*="destination"]',
+                            'td:nth-child(2)',
+                            'div:nth-child(2)',
+                            '.cell:nth-child(2)'
+                        ];
+                        
+                        const rateSelectors = [
+                            '[data-test="load-rate-cell"]',
+                            '[data-testid*="rate"]',
+                            '[class*="rate"]',
+                            '[class*="price"]',
+                            '[class*="amount"]',
+                            '[aria-label*="rate"]',
+                            'td:nth-child(3)',
+                            'div:nth-child(3)',
+                            '.cell:nth-child(3)'
+                        ];
+                        
+                        const companySelectors = [
+                            '[data-test="load-company-cell"]',
+                            '[data-testid*="company"]',
+                            '[class*="company"]',
+                            '[class*="shipper"]',
+                            '[aria-label*="company"]',
+                            'td:nth-child(4)',
+                            'div:nth-child(4)',
+                            '.cell:nth-child(4)'
+                        ];
+                        
+                        const ageSelectors = [
+                            '[data-test="load-age-cell"]',
+                            '[data-testid*="age"]',
+                            '[class*="age"]',
+                            '[class*="time"]',
+                            '[class*="posted"]',
+                            '[aria-label*="age"]',
+                            'td:last-child',
+                            'div:last-child',
+                            '.cell:last-child'
+                        ];
+
+                        // Extract data using pattern matching as fallback
+                        const extractFromText = (text) => {
+                            // Common patterns for freight load data
+                            const cityStatePattern = /([A-Z]{2,}\s*,\s*[A-Z]{2})/g;
+                            const ratePattern = /\$[\d,]+(?:\.\d{2})?/g;
+                            const milesPattern = /(\d+)\s*mi/i;
+                            
+                            const cities = text.match(cityStatePattern) || [];
+                            const rates = text.match(ratePattern) || [];
+                            const miles = text.match(milesPattern) || [];
+                            
+                            return {
+                                cities: cities,
+                                rates: rates,
+                                miles: miles
+                            };
                         };
+                        
+                        const patterns = extractFromText(allText);
+
+                        // Extract phone number from contact link
+                        const phoneSelectors = [
+                            'a.contacts__phone',
+                            'a[href^="tel:"]',
+                            '.contacts__phone',
+                            '[class*="phone"]'
+                        ];
+                        
+                        let phoneNumber = '';
+                        for (const selector of phoneSelectors) {
+                            const phoneEl = el.querySelector(selector);
+                            if (phoneEl) {
+                                // Extract from href (tel:2095995418) or text content
+                                const href = phoneEl.getAttribute('href');
+                                if (href && href.startsWith('tel:')) {
+                                    const rawPhone = href.replace('tel:', '');
+                                    // Format phone number (2095995418 -> (209) 599-5418)
+                                    if (rawPhone.length === 10) {
+                                        phoneNumber = `(${rawPhone.slice(0,3)}) ${rawPhone.slice(3,6)}-${rawPhone.slice(6)}`;
+                                    } else {
+                                        phoneNumber = rawPhone;
+                                    }
+                                } else {
+                                    phoneNumber = phoneEl.textContent.trim();
+                                }
+                                break;
+                            }
+                        }
+
+                        // Extract reference number from data-item div
+                        const referenceSelectors = [
+                            '.data-item',
+                            'div.data-item',
+                            '[class*="data-item"]'
+                        ];
+                        
+                        let referenceNumber = '';
+                        for (const selector of referenceSelectors) {
+                            const refEl = el.querySelector(selector);
+                            if (refEl) {
+                                const refText = refEl.textContent.trim();
+                                // Look for reference number pattern (letters + numbers like B212555)
+                                if (refText.match(/^[A-Z]+\d+$/)) {
+                                    referenceNumber = refText;
+                                    break;
+                                }
+                            }
+                        }
+
+                        return {
+                            origin: getTextContent(originSelectors) || (patterns.cities[0] || ''),
+                            destination: getTextContent(destinationSelectors) || (patterns.cities[1] || ''),
+                            rate: getTextContent(rateSelectors) || (patterns.rates[0] || ''),
+                            company: getTextContent(companySelectors),
+                            age: getTextContent(ageSelectors),
+                            phone: phoneNumber || '',
+                            reference: referenceNumber || '',
+                            rawText: allText, // Include raw text for debugging
+                            elementHTML: el.outerHTML.substring(0, 500) // Include HTML structure for debugging
+                        };
+                    });
+
+                    // Now click into the load detail to get phone and reference number
+                    let detailedData = { phone: '', reference: '' };
+                    try {
+                        // Ensure no modals are open before clicking the next load
+                        if (i > 0) {
+                            this.log('info', `🔄 Ensuring previous modals are closed before load ${i + 1}...`);
+                            await this.page.keyboard.press('Escape'); // Close any open modals
+                            await this.page.waitForTimeout(500);
+                        }
+                        
+                        this.log('info', `🖱️ DOUBLE-CLICKING into load ${i + 1} for detailed contact info...`);
+                        
+                        // Take a screenshot before clicking
+                        await this.page.screenshot({ path: `output/before-click-load-${i + 1}.png`, fullPage: false });
+                        this.log('info', `📸 Screenshot saved: before-click-load-${i + 1}.png`);
+                        
+                        // Click on the load row to open details
+                        await row.click();
+                        this.log('info', `✅ First click on load ${i + 1} row (opens basic view)`);
+                        
+                        await this.page.waitForTimeout(1000); // Wait for basic view to load
+                        
+                        // Take a screenshot after first click
+                        await this.page.screenshot({ path: `output/after-first-click-load-${i + 1}.png`, fullPage: false });
+                        this.log('info', `📸 Screenshot after first click: after-first-click-load-${i + 1}.png`);
+                        
+                        // SECOND CLICK to expand/roll down the detailed view with contact info
+                        this.log('info', `🖱️ Second click on load ${i + 1} to expand detailed view...`);
+                        await row.click();
+                        this.log('info', `✅ Second click on load ${i + 1} row (expands detailed view)`);
+                        
+                        await this.page.waitForTimeout(1500); // Wait for detailed view to expand
+                        
+                        // Take a screenshot after second click to see the expanded details
+                        await this.page.screenshot({ path: `output/after-second-click-load-${i + 1}.png`, fullPage: false });
+                        this.log('info', `📸 Screenshot after second click: after-second-click-load-${i + 1}.png`);
+                        
+                        this.log('info', `🔍 Analyzing expanded modal content for load ${i + 1}...`);
+                        
+                        // Look for and click contact-related tabs or buttons within the modal
+                        try {
+                            const contactTabSelectors = [
+                                'button:has-text("Contact")',
+                                'tab:has-text("Contact")',
+                                '[role="tab"]:has-text("Contact")',
+                                'button:has-text("Details")',
+                                'button:has-text("Info")',
+                                '.tab:has-text("Contact")',
+                                'a:has-text("Contact")',
+                                'button[aria-label*="contact"]',
+                                'button[aria-label*="Contact"]'
+                            ];
+                            
+                            let contactTabFound = false;
+                            for (const selector of contactTabSelectors) {
+                                const tabElement = await this.page.$(selector);
+                                if (tabElement) {
+                                    this.log('info', `📞 Found contact tab with selector: ${selector}`);
+                                    await tabElement.click();
+                                    await this.page.waitForTimeout(1000); // Wait for tab content to load
+                                    contactTabFound = true;
+                                    break;
+                                }
+                            }
+                            
+                            if (!contactTabFound) {
+                                this.log('info', `ℹ️ No contact tab found, looking for expandable sections...`);
+                                
+                                // Look for expandable sections, "More Info" buttons, etc.
+                                const expandableSelectors = [
+                                    'button:has-text("More")',
+                                    'button:has-text("Show")',
+                                    'button:has-text("View")',
+                                    'button:has-text("Expand")',
+                                    '[class*="expand"]',
+                                    '[class*="more"]',
+                                    '[class*="toggle"]',
+                                    'button[aria-expanded="false"]',
+                                    '.accordion-button',
+                                    '.collapsible-button'
+                                ];
+                                
+                                for (const selector of expandableSelectors) {
+                                    const expandElement = await this.page.$(selector);
+                                    if (expandElement) {
+                                        this.log('info', `🔽 Found expandable element: ${selector}`);
+                                        await expandElement.click();
+                                        this.log('info', `✅ Clicked expandable element, waiting for content to load...`);
+                                        await this.page.waitForTimeout(1500); // Wait longer for expansion
+                                        
+                                        // Take a screenshot after expansion
+                                        await this.page.screenshot({ path: `output/after-expand-load-${i + 1}.png`, fullPage: false });
+                                        this.log('info', `📸 Screenshot after expansion: after-expand-load-${i + 1}.png`);
+                                        
+                                        // Wait specifically for CONTACT INFORMATION section to appear
+                                        try {
+                                            await this.page.waitForSelector('a.contacts__phone, a[href^="tel:"], a[href^="mailto:"]', { timeout: 3000 });
+                                            this.log('info', `✅ Contact information section loaded`);
+                                        } catch (contactWaitError) {
+                                            this.log('info', `⏳ Contact information section not found, continuing anyway...`);
+                                        }
+                                        
+                                        break;
+                                    }
+                                }
+                            }
+                            
+                        } catch (tabError) {
+                            this.log('debug', `Tab search error: ${tabError.message}`);
+                        }
+                        
+                        // Extract detailed information from the modal/detail view
+                        detailedData = await this.page.evaluate(() => {
+                            // Look for phone number in detail view - focus on modal/dialog content
+                            let phone = '';
+                            
+                            // First, try to find the modal/dialog container - prioritize the most recently opened/visible one
+                            const modalSelectors = [
+                                '[role="dialog"]:not([style*="display: none"])',  // Visible dialogs only
+                                '.modal-content:not([style*="display: none"])',
+                                '.dialog-content:not([style*="display: none"])',
+                                '[class*="modal"]:not([style*="display: none"])',
+                                '[class*="dialog"]:not([style*="display: none"])',
+                                '[class*="popup"]:not([style*="display: none"])',
+                                '[class*="detail"]:not([style*="display: none"])'
+                            ];
+                            
+                            let modalContainer = null;
+                            for (const modalSelector of modalSelectors) {
+                                const modals = document.querySelectorAll(modalSelector);
+                                // Get the last (most recent) visible modal
+                                for (let j = modals.length - 1; j >= 0; j--) {
+                                    const modal = modals[j];
+                                    if (modal && modal.offsetParent !== null) { // Check if visible
+                                        modalContainer = modal;
+                                        break;
+                                    }
+                                }
+                                if (modalContainer) break;
+                            }
+                            
+                            // If no modal found, search the whole document but be more specific
+                            const searchContainer = modalContainer || document;
+                            
+                            // Look for both phone numbers and emails - using exact selectors from user's HTML
+                            const contactSelectors = [
+                                'a.contacts__phone.ng-star-inserted[href^="tel:"]',  // Exact phone selector
+                                'a[href^="tel:"]',           // Phone links
+                                'a[href^="mailto:"]',        // Email links  
+                                'a.contacts__phone',
+                                '.contacts__phone',
+                                '[class*="phone"]',
+                                '[class*="contact"]',
+                                '[class*="email"]'
+                            ];
+                            
+                            let email = '';
+                            
+                            // Look for contact info within the container
+                            for (const selector of contactSelectors) {
+                                const contactElements = searchContainer.querySelectorAll(selector);
+                                
+                                for (const contactEl of contactElements) {
+                                    // Skip if element is not visible
+                                    if (contactEl.offsetParent === null) continue;
+                                    
+                                    const href = contactEl.getAttribute('href');
+                                    if (href && href.startsWith('tel:')) {
+                                        const rawPhone = href.replace('tel:', '');
+                                        if (rawPhone.length === 10) {
+                                            phone = `(${rawPhone.slice(0,3)}) ${rawPhone.slice(3,6)}-${rawPhone.slice(6)}`;
+                                        } else {
+                                            phone = rawPhone;
+                                        }
+                                    } else if (href && href.startsWith('mailto:')) {
+                                        email = href.replace('mailto:', '').trim();
+                                    } else {
+                                        const contactText = contactEl.textContent.trim();
+                                        // Check if it's a phone number
+                                        if (contactText.match(/\(\d{3}\)\s*\d{3}-\d{4}|\d{3}[-.\s]?\d{3}[-.\s]?\d{4}/)) {
+                                            phone = contactText;
+                                        }
+                                        // Check if it's an email
+                                        else if (contactText.match(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/)) {
+                                            email = contactText;
+                                        }
+                                    }
+                                }
+                            }
+                            
+                            // Look for reference number in detail view within the same container
+                            let reference = '';
+                            const refSelectors = [
+                                '.data-item',
+                                'div.data-item', 
+                                '[class*="data-item"]',
+                                '[class*="reference"]',
+                                '[class*="load-id"]'
+                            ];
+                            
+                            for (const selector of refSelectors) {
+                                const refElements = searchContainer.querySelectorAll(selector);
+                                
+                                for (const refEl of refElements) {
+                                    // Skip if element is not visible
+                                    if (refEl.offsetParent === null) continue;
+                                    
+                                    const refText = refEl.textContent.trim();
+                                    if (refText.match(/^[A-Z]+\d+$/)) {
+                                        reference = refText;
+                                        break;
+                                    }
+                                }
+                                if (reference) break;
+                            }
+                            
+                            // If still no contact info found, do a more comprehensive search
+                            if (!phone && !email && !reference) {
+                                // Search the entire page for any contact information
+                                const allText = document.body.textContent;
+                                
+                                // Look for phone patterns in all text
+                                const phonePattern = /\(?(\d{3})\)?[-.\s]?(\d{3})[-.\s]?(\d{4})/g;
+                                const phoneMatches = allText.match(phonePattern);
+                                if (phoneMatches && phoneMatches.length > 0) {
+                                    phone = phoneMatches[0]; // Take the first phone number found
+                                }
+                                
+                                // Look for email patterns in all text
+                                const emailPattern = /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/g;
+                                const emailMatches = allText.match(emailPattern);
+                                if (emailMatches && emailMatches.length > 0) {
+                                    email = emailMatches[0]; // Take the first email found
+                                }
+                                
+                                // Look for reference patterns in all text
+                                const refPattern = /\b[A-Z]{1,3}\d{4,8}\b/g;
+                                const refMatches = allText.match(refPattern);
+                                if (refMatches && refMatches.length > 0) {
+                                    reference = refMatches[0]; // Take the first reference found
+                                }
+                            }
+                            
+                            // Debug: Find all contact-related elements for logging
+                            const debugContactElements = searchContainer.querySelectorAll('a[href^="tel:"], a[href^="mailto:"], .contacts__phone');
+                            const debugInfo = [];
+                            debugContactElements.forEach((el, idx) => {
+                                debugInfo.push({
+                                    index: idx,
+                                    tagName: el.tagName,
+                                    className: el.className,
+                                    href: el.href,
+                                    textContent: el.textContent.trim()
+                                });
+                            });
+                            
+                            return { 
+                                phone, 
+                                email,
+                                reference,
+                                modalFound: modalContainer ? modalContainer.className || modalContainer.tagName : 'none',
+                                contactElementsFound: searchContainer.querySelectorAll('a[href^="tel:"], a[href^="mailto:"], [class*="phone"], [class*="contact"], [class*="email"]').length,
+                                allLinksFound: searchContainer.querySelectorAll('a').length,
+                                modalText: modalContainer ? modalContainer.textContent.substring(0, 500) : 'no modal',
+                                pageTextSample: document.body.textContent.substring(0, 500), // Sample of page text for debugging
+                                debugContactElements: debugInfo,
+                                hasContactSection: !!searchContainer.querySelector('a.contacts__phone, a[href^="tel:"], a[href^="mailto:"]')
+                            };
+                        });
+                        
+                        // Close the detail view (try multiple methods)
+                        try {
+                            this.log('info', `🚪 Closing load ${i + 1} detail view...`);
+                            const closeSelectors = [
+                                'button[aria-label="Close"]',
+                                '.close-button',
+                                '[class*="close"]',
+                                'button:has-text("Close")',
+                                '[role="button"]:has-text("×")'
+                            ];
+                            
+                            let closed = false;
+                            for (const selector of closeSelectors) {
+                                const closeBtn = await this.page.$(selector);
+                                if (closeBtn) {
+                                    this.log('info', `✅ Found close button with selector: ${selector}`);
+                                    await closeBtn.click();
+                                    closed = true;
+                                    break;
+                                }
+                            }
+                            
+                            if (!closed) {
+                                this.log('info', `🔑 No close button found, trying Escape key...`);
+                                // Try pressing Escape key
+                                await this.page.keyboard.press('Escape');
+                            }
+                            
+                            await this.page.waitForTimeout(1000); // Wait longer for modal to close
+                            
+                            // Verify the modal is actually closed by checking if it's still visible
+                            const modalStillOpen = await this.page.$('.load-details');
+                            if (modalStillOpen) {
+                                this.log('warn', `⚠️ Modal still open, trying additional close methods...`);
+                                // Try clicking outside the modal
+                                await this.page.click('body', { position: { x: 50, y: 50 } });
+                                await this.page.waitForTimeout(500);
+                            }
+                            
+                            this.log('info', `✅ Load ${i + 1} detail view closed`);
+                            
+                        } catch (closeError) {
+                            this.log('warn', `Could not close detail view: ${closeError.message}`);
+                        }
+                        
+                        this.log('info', `📊 LOAD ${i + 1} EXTRACTION RESULTS:`, {
+                            phone: detailedData.phone || '❌ NOT FOUND',
+                            email: detailedData.email || '❌ NOT FOUND', 
+                            reference: detailedData.reference || '❌ NOT FOUND',
+                            modalFound: detailedData.modalFound,
+                            contactElementsFound: detailedData.contactElementsFound,
+                            allLinksFound: detailedData.allLinksFound,
+                            modalText: detailedData.modalText
+                        });
+                        
+                    } catch (detailError) {
+                        this.log('warn', `Failed to get details for load ${i + 1}: ${detailError.message}`);
+                    }
+                    
+                    // Merge basic and detailed data
+                    const loadData = {
+                        ...basicLoadData,
+                        phone: detailedData.phone || basicLoadData.phone,
+                        email: detailedData.email || '',
+                        reference: detailedData.reference || basicLoadData.reference
+                    };
+
+                    // Log the extracted data for debugging
+                    this.log('debug', `Load ${i + 1} raw data:`, {
+                        origin: loadData.origin,
+                        destination: loadData.destination,
+                        rate: loadData.rate,
+                        company: loadData.company,
+                        age: loadData.age,
+                        phone: loadData.phone,
+                        email: loadData.email,
+                        reference: loadData.reference,
+                        rawText: loadData.rawText.substring(0, 200) + '...',
+                        elementHTML: loadData.elementHTML.substring(0, 200) + '...'
                     });
 
                     // Parse rate information
@@ -1138,16 +2095,23 @@ class LocalhostScraper {
                     const perMileMatch = loadData.rate.match(/\$([0-9.]+).*?\/mi/);
 
                     const processedLoad = {
-                        reference_number: `LOCALHOST_${Date.now()}_${i}`,
+                        reference_number: loadData.reference || `LOCALHOST_${Date.now()}_${i}`,
                         origin: loadData.origin || '',
                         destination: loadData.destination || '',
                         rate_total_usd: rateMatch ? parseInt(rateMatch[1].replace(/,/g, '')) : null,
                         rate_per_mile: perMileMatch ? parseFloat(perMileMatch[1]) : null,
                         company: loadData.company || '',
-                        contact: 'N/A', // Would need to click for details
+                        contact: loadData.email || loadData.phone || 'N/A',
                         age_posted: loadData.age || '',
                         extracted_at: new Date().toISOString()
                     };
+
+                    this.log('info', `✅ Processed load ${i + 1}:`, {
+                        origin: processedLoad.origin,
+                        destination: processedLoad.destination,
+                        rate_total_usd: processedLoad.rate_total_usd,
+                        company: processedLoad.company
+                    });
 
                     extractedData.push(processedLoad);
 
@@ -1167,18 +2131,18 @@ class LocalhostScraper {
 
     async saveData(data) {
         try {
-            if (data.length === 0) {
-                this.log('warn', 'No data to save');
-                return;
-            }
-
             const outputDir = './output';
             if (!fs.existsSync(outputDir)) {
                 fs.mkdirSync(outputDir, { recursive: true });
             }
 
             const csvPath = path.join(outputDir, CONFIG.outputFile);
-            const writeHeader = !fs.existsSync(csvPath);
+            
+            // Always start fresh - wipe the file each run
+            this.log('info', '🗑️ Starting fresh - wiping previous data file');
+            if (fs.existsSync(csvPath)) {
+                fs.unlinkSync(csvPath);
+            }
 
             const csvWriter = createCsvWriter({
                 path: csvPath,
@@ -1192,12 +2156,19 @@ class LocalhostScraper {
                     { id: 'contact', title: 'contact' },
                     { id: 'age_posted', title: 'age_posted' },
                     { id: 'extracted_at', title: 'extracted_at' }
-                ],
-                append: !writeHeader
+                ]
+                // No append mode - always create fresh
             });
 
+            if (!data || data.length === 0) {
+                // Write empty file with just headers
+                await csvWriter.writeRecords([]);
+                this.log('warn', 'No data to save - created fresh empty file with headers');
+                return;
+            }
+
             await csvWriter.writeRecords(data);
-            this.log('info', `💾 Saved ${data.length} records to ${csvPath}`);
+            this.log('info', `💾 Saved ${data.length} records to fresh ${csvPath}`);
 
         } catch (error) {
             this.log('error', 'Failed to save data', { error: error.message });
@@ -1212,6 +2183,12 @@ class LocalhostScraper {
             }
 
             await this.navigateToLoadBoard();
+            
+            // Fill the search form with the specified criteria
+            await this.fillSearchForm();
+            
+            // Now scrape the actual load data from the search results
+            this.log('info', '🚛 Scraping load data from search results...');
             const data = await this.scrapeLoads();
             await this.saveData(data);
 
@@ -1262,6 +2239,20 @@ async function main() {
 
     } catch (error) {
         console.error('❌ SCRAPER FAILED:', error.message);
+        
+        // Take error screenshot for debugging in headless mode
+        try {
+            if (scraper.page) {
+                await scraper.page.screenshot({ 
+                    path: 'output/error-screenshot.png', 
+                    fullPage: true 
+                });
+                console.log('📸 Error screenshot saved to output/error-screenshot.png');
+            }
+        } catch (screenshotError) {
+            console.log('⚠️ Could not take error screenshot');
+        }
+        
         process.exit(1);
     } finally {
         await scraper.close();

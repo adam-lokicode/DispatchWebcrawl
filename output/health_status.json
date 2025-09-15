@@ -1,0 +1,21 @@
+{
+  "service": "production-scraper",
+  "status": "critical",
+  "lastRun": 1757201059115,
+  "lastSuccess": 1756892559391,
+  "consecutiveFailures": 764,
+  "totalRuns": 1041,
+  "totalSuccesses": 274,
+  "totalFailures": 767,
+  "uptimeStart": 1756690520696,
+  "currentRun": 1757201059115,
+  "memoryUsage": {
+    "rss": 75,
+    "heapTotal": 41,
+    "heapUsed": 38,
+    "external": 2
+  },
+  "errorRate": 0.7367915465898175,
+  "lastError": "page.waitForSelector: Target page, context or browser has been closed",
+  "lastErrorTime": 1757201068246
+}

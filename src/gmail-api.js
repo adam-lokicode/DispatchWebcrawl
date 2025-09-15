@@ -77,8 +77,8 @@ class GmailAPI {
         try {
             console.log('🔍 Searching Gmail for verification code...');
             
-            // Search for recent emails with verification keywords
-            const query = `from:DAT OR subject:(verification code) OR body:(verification code) newer_than:${maxAge}m`;
+            // Search for VERY recent emails (last 2 minutes only) with verification keywords  
+            const query = `from:DAT OR subject:(verification code) OR body:(verification code) newer_than:2m`;
             
             const response = await this.gmail.users.messages.list({
                 userId: 'me',
